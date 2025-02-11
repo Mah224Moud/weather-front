@@ -1,45 +1,90 @@
-<h1>Connexion / Inscription</h1>
 
-<!-- Formulaire de Connexion -->
-<section>
-  <h2>Connexion</h2>
-  <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-    <label for="email">Email :</label>
-    <input type="email" id="email" formControlName="email" />
-    <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-      <small *ngIf="loginForm.get('email')?.errors?.['required']">Email requis.</small>
-      <small *ngIf="loginForm.get('email')?.errors?.['email']">Email invalide.</small>
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
+  </div>
+</div>
 
-    <label for="password">Mot de passe :</label>
-    <input type="password" id="password" formControlName="password" />
-    <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-      <small *ngIf="loginForm.get('password')?.errors?.['required']">Mot de passe requis.</small>
-      <small *ngIf="loginForm.get('password')?.errors?.['minlength']">6 caractères minimum.</small>
+
+<div class="container-fluid vh-100">
+  <div class="row d-flex align-items-center h-100">
+
+    
+    <div class="col-md-6 d-flex align-items-center justify-content-center mx-auto">
+      <div class="card p-4 shadow-lg" style="max-width: 400px; width: 100%;">
+        
+       
+        <div class="text-container text-center mb-4">
+          <h1 class="welcome-text">Bienvenue !</h1>
+          <p class="welcome-subtext">Connectez-vous pour accéder à vos données météo.</p>
+        </div>
+
+        
+        <h3 class="text-center mb-3">{{ showLoginForm ? 'Connexion' : 'Inscription' }}</h3>
+
+        
+        <form *ngIf="showLoginForm" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+          <div class="mb-3">
+            <label for="email" class="form-label">Email :</label>
+            <input type="email" id="email" formControlName="email" class="form-control" placeholder="Entrez votre email" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Mot de passe :</label>
+            <input type="password" id="password" formControlName="password" class="form-control" placeholder="Votre mot de passe" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100" [disabled]="loginForm.invalid">Se connecter</button>
+        </form>
+
+       
+        <form *ngIf="showRegisterForm" [formGroup]="registerForm" (ngSubmit)="onRegister()">
+          <div class="mb-3">
+            <label for="first-name" class="form-label">Prénom :</label>
+            <input type="text" id="first-name" formControlName="firstName" class="form-control" placeholder="Entrez votre prénom" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="last-name" class="form-label">Nom :</label>
+            <input type="text" id="last-name" formControlName="lastName" class="form-control" placeholder="Entrez votre nom" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="new-email" class="form-label">Email :</label>
+            <input type="email" id="new-email" formControlName="email" class="form-control" placeholder="Entrez votre email" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="new-password" class="form-label">Mot de passe :</label>
+            <input type="password" id="new-password" formControlName="password" class="form-control" placeholder="Choisissez un mot de passe" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100" [disabled]="registerForm.invalid">S'inscrire</button>
+        </form>
+
+        
+        <div class="text-center mt-3">
+          <p *ngIf="showLoginForm">Pas encore de compte ? <a href="#" (click)="toggleForms($event)">S'inscrire</a></p>
+          <p *ngIf="showRegisterForm">Déjà inscrit ? <a href="#" (click)="toggleForms($event)">Se connecter</a></p>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
 
-    <button type="submit" [disabled]="loginForm.invalid">Se connecter</button>
-  </form>
+
+<section *ngIf="adminMode">
+  <h2>Mode Admin</h2>
+  <button (click)="showCacheData()">Afficher les données du cache</button>
+  <button (click)="clearCache()">Nettoyer le cache</button>
+  <button (click)="logout()">Se déconnecter</button>
 </section>
 
-<!-- Formulaire d'Inscription -->
-<section>
-  <h2>Inscription</h2>
-  <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
-    <label for="new-email">Email :</label>
-    <input type="email" id="new-email" formControlName="email" />
-    <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
-      <small *ngIf="registerForm.get('email')?.errors?.['required']">Email requis.</small>
-      <small *ngIf="registerForm.get('email')?.errors?.['email']">Email invalide.</small>
-    </div>
 
-    <label for="new-password">Mot de passe :</label>
-    <input type="password" id="new-password" formControlName="password" />
-    <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
-      <small *ngIf="registerForm.get('password')?.errors?.['required']">Mot de passe requis.</small>
-      <small *ngIf="registerForm.get('password')?.errors?.['minlength']">6 caractères minimum.</small>
-    </div>
-
-    <button type="submit" [disabled]="registerForm.invalid">S'inscrire</button>
-  </form>
+<section *ngIf="isLoggedIn && !adminMode">
+  <h2>Bienvenue {{ loggedInUser?.firstName }} {{ loggedInUser?.lastName }}</h2>
+  <button (click)="logout()">Se déconnecter</button>
 </section>
