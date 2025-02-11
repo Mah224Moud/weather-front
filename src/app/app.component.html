@@ -1,12 +1,88 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 
-<nav>
-  <a href="/">Accueil</a>
-  <a href="/login">Connexion/Inscription</a>
-  <a href="/data-consultation">Consultation des données</a>
-  <a href="/visualization">Visualisation</a>
-  <a href="/interfacemeteo">Interface Météo</a>
-  <a href="/download">Extraction des données</a>
-  <a href="/help">Aide</a>
+<nav class="navbar navbar-expand-lg bg-gradient-to-r from-cyan-500 to-blue-500 border-0">
+  <div class="container-fluid">
+
+    <a href="/" class="navbar-brand d-flex align-items-center">
+      <img src="/assets/img/logo/logo-meteo.png" class="logo-img" alt="Logo Météo" />
+      <span class="ms-3 text-brand">iMétéo</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 mx-auto">
+        <li class="nav-item">
+          <a href="/data-consultation" class="nav-link">Consultation des données</a>
+        </li>
+        <li class="nav-item">
+          <a href="/visualization" class="nav-link">Visualisations</a>
+        </li>
+        <li class="nav-item">
+          <a href="/interfacemeteo" class="nav-link">Météo</a>
+        </li>
+        <li class="nav-item">
+          <a href="/download" class="nav-link">Extraction</a>
+        </li>
+        <li class="nav-item">
+          <a href="/help" class="nav-link">Aide</a>
+        </li>
+      </ul>
+
+
+      <div class="connexion ms-auto">
+          <a href="/login" class="btn btn-outline-primary px-4">Connexion</a>
+      </div>
+    </div>
+  </div>
 </nav>
+
+
+<!--<nav class="nav-container">-->
+<!--    <div class="nav-content">-->
+<!--        &lt;!&ndash; Logo and Brand &ndash;&gt;-->
+<!--        <a href="/" class="brand-container">-->
+<!--            <img src="/assets/img/logo/logo-meteo.png" class="brand-logo" alt="Logo Météo" />-->
+<!--            <span class="brand-text">iMétéo</span>-->
+<!--        </a>-->
+
+<!--        &lt;!&ndash; Mobile Menu Button &ndash;&gt;-->
+<!--        <button class="menu-button" (click)="toggleMenu()" [class.active]="isMenuOpen"  data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--            <span class="menu-icon"></span>-->
+<!--        </button>-->
+
+<!--        &lt;!&ndash; Navigation Items &ndash;&gt;-->
+<!--        <div class="nav-items collapse navbar-collapse" id="navbarSupportedContent" [class.open]="isMenuOpen">-->
+<!--            <ul class="nav-list">-->
+<!--                <li><a href="/data-consultation" class="nav-link">Consultation des données</a></li>-->
+<!--                <li><a href="/visualization" class="nav-link">Visualisations</a></li>-->
+<!--                <li><a href="/interfacemeteo" class="nav-link">Météo</a></li>-->
+<!--                <li><a href="/download" class="nav-link">Extraction</a></li>-->
+<!--                <li><a href="/help" class="nav-link">Aide</a></li>-->
+<!--            </ul>-->
+
+<!--            &lt;!&ndash; Search Bar &ndash;&gt;-->
+<!--            <div class="search-container">-->
+<!--                <input-->
+<!--                        type="text"-->
+<!--                        class="search-input"-->
+<!--                        [@searchAnimation]="isSearchActive ? 'visible' : 'hidden'"-->
+<!--                        [(ngModel)]="searchQuery"-->
+<!--                        (keydown.enter)="submitSearch()"-->
+<!--                        placeholder="Rechercher..."-->
+<!--                >-->
+<!--                <button class="search-button" (click)="toggleSearch()">-->
+<!--                    <i class="icon" [class.search]="!isSearchActive" [class.arrow]="isSearchActive"></i>-->
+<!--                </button>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Login Button &ndash;&gt;-->
+<!--            <a href="/login" class="login-button">Connexion</a>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</nav>-->
 <router-outlet></router-outlet>

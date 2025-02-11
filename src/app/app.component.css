@@ -1,16 +1,333 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@font-face {
+    font-family: 'SF Pro';
+    /*src: url('/assets/font/SFPRODISPLAYREGULAR.OTF') format('opentype');*/
+    /*font-weight: normal;*/
+    /*font-style: normal;*/
+}
+
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Rendre le logo réactif et appliquer une transition */
+.logo-img {
+    max-height: 40px; /* Ajuster la taille du logo */
+    object-fit: contain; /* Assurer que l'image conserve son aspect */
+    transition: transform 0.3s ease, filter 0.3s ease; /* Transition fluide */
+}
+
+/* Lors du survol de la navbar, zoomer et illuminer le logo */
+.navbar-brand:hover .logo-img {
+    transform: scale(1.1); /* Zoomer le logo */
+    filter: brightness(1.2); /* Éclaircir le logo */
+}
+
+/* Appliquer une transition au texte */
+.text-brand {
+    font-size: 1.1rem; /* Taille du texte */
+    font-weight: 600; /* Gras mais pas trop lourd */
+    color: #343a40; /* Couleur initiale du texte */
+    transition: color 0.3s ease, text-decoration 0.3s ease; /* Transition pour la couleur et soulignement */
+}
+
+/* Changer la couleur du texte et le souligner lors du survol */
+.navbar-brand:hover .text-brand {
+    color: deepskyblue;
+    text-decoration: none; /* Souligner le texte */
+}
+@keyframes bounceLoop {
+    0%, 100% { transform: translateY(0); }  /* Position normale */
+    50% { transform: translateY(-5px); }  /* Légère montée */
+}
+
+/* Effet de hover pour interagir avec la navbar */
+.navbar-nav li:hover {
+    animation: bounceHover 0.5s ease-in-out;
+}
+
+@keyframes bounceHover {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
 nav {
     display: flex;
     gap: 15px;
-    background-color: #f0f0f0;
+    background-color: white;
     padding: 10px;
+    border-radius: 15px;
+    margin-bottom: 10px;
   }
   
   nav a {
     text-decoration: none;
     color: #333;
+
   }
-  
-  nav a:hover {
-    text-decoration: underline;
+
+  ul{
+    display: flex;
   }
-  
+  ul li a {
+      padding : 10px;
+      /*transition: all ease-in-out 1s;*/
+      /*font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;*/
+      font-family: Carlito, sans-serif;
+      font-size: 18px;
+
+      /*background-color: cornflowerblue;*/
+      border-radius: 15px;
+      background-color: white;
+      animation: linear 1s;
+      margin: 19px;
+      animation: bounceLoop 3s infinite ease-in-out;
+  }
+
+
+  ul li a:hover {
+      /*background-color: #00b4db;*/
+      /*border-radius: 45px;*/
+    /*text-decoration: underline;*/
+    /*transition: all ease-in-out 500ms;*/
+      animation: bounce 0.5s ease-in-out;
+      color: grey;
+      border: 1px solid;
+      border-color: grey;
+  }
+
+
+  .connexion{
+      display: flex;
+      padding : 10px;
+      border-radius: 45px;
+      /*text-decoration: underline;*/
+      transition: all ease-in-out 1s;
+      margin: 1rem;
+  }
+
+  .connexion:hover {
+      /*background-color: #00b4db;*/
+      border-radius: 45px;
+    /*text-decoration: underline;*/
+    transition: all ease-in-out 1s;
+  }
+
+  .connexion a:hover{
+    color: whitesmoke;
+  }
+
+/*!* app.component.css *!*/
+/* Style de l'icône de recherche */
+.search-icon {
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+    background: transparent;
+    border: none;
+}
+
+/* Couleur bleue lors du hover */
+.search-icon:hover {
+    color: #007bff;  /* Bleu sur hover */
+}
+
+/* Style pour la barre de recherche */
+.search-bar {
+    display: none;  /* Cacher la barre au début */
+    width: 0;
+    transition: width 0.5s ease-in-out;
+    font-size: 16px;
+    border-radius: 50px;
+    padding: 10px 15px;
+    border: 2px solid #007bff;
+}
+
+/* Afficher la barre de recherche et animer son ouverture */
+.search-bar.show {
+    display: block;
+    width: 200px;  /* Largeur après animation */
+}
+
+/* Transformation de l'icône de recherche en flèche */
+.search-icon i {
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Si la barre de recherche est active, la flèche apparaît */
+.search-icon i.bi-arrow-right {
+    transform: rotate(90deg); /* Rotation de l'icône */
+}
+
+
+
+/*-----*/
+
+.nav-container {
+    @apply fixed top-0 left-0 right-0 z-50 bg-white shadow-md;
+
+.nav-content {
+    @apply container mx-auto px-4 h-16 flex items-center justify-between;
+}
+
+.brand-container {
+    @apply flex items-center space-x-3 hover:opacity-90 transition-opacity;
+
+.brand-logo {
+    @apply h-8 w-auto;
+}
+
+.brand-text {
+    @apply text-xl font-semibold text-gray-800;
+}
+}
+
+.menu-button {
+    @apply lg:hidden relative w-10 h-10 focus:outline-none;
+
+.menu-icon {
+    @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-0.5 bg-gray-800 transition-all;
+
+&::before,
+&::after {
+     content: '';
+     @apply absolute left-0 w-6 h-0.5 bg-gray-800 transition-all;
+ }
+
+&::before { @apply -translate-y-2; }
+&::after { @apply translate-y-2; }
+}
+
+&.active {
+.menu-icon {
+    @apply bg-transparent;
+
+&::before {
+     @apply -translate-y-0 rotate-45;
+ }
+
+&::after {
+     @apply translate-y-0 -rotate-45;
+ }
+}
+}
+}
+
+.nav-items {
+    @apply fixed lg:static inset-x-0 top-16 bg-white lg:bg-transparent
+    lg:flex lg:items-center lg:space-x-8
+    transition-all duration-300 ease-in-out
+    transform translate-y-[-100%] lg:translate-y-0
+    opacity-0 lg:opacity-100 invisible lg:visible;
+
+&.open {
+     @apply translate-y-0 opacity-100 visible;
+ }
+}
+
+.nav-list {
+    @apply flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-6
+    py-6 lg:py-0;
+
+.nav-link {
+    @apply text-gray-600 hover:text-gray-900 font-medium transition-colors
+    relative after:absolute after:bottom-0 after:left-0 after:w-0
+    after:h-0.5 after:bg-blue-500 after:transition-all
+    hover:after:w-full;
+}
+}
+
+.search-container {
+    @apply relative flex items-center;
+
+.search-input {
+    @apply h-10 px-4 rounded-full bg-gray-100 border-none
+    focus:outline-none focus:ring-2 focus:ring-blue-500
+    placeholder-gray-400;
+}
+
+.search-button {
+    @apply absolute right-3 w-6 h-6 flex items-center justify-center
+    text-gray-500 hover:text-gray-700 transition-colors border-none;
+}
+
+.icon {
+    @apply w-4 h-4 transition-transform;
+
+&.search::before {
+     content: '🔍';
+ }
+
+&.arrow::before {
+     content: '→';
+ }
+}
+}
+}
+
+.login-button {
+    @apply px-6 py-2 rounded-full bg-blue-500 text-white font-medium
+    hover:bg-blue-600 transition-colors
+    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+}
+}
+
+// Responsive adjustments
+@media (max-width: 1023px) {
+    .nav-items {
+        @apply shadow-lg;
+    }
+
+    .nav-list {
+        @apply px-4;
+    }
+
+    .search-container,
+    .login-button {
+        @apply mx-4 my-4;
+    }
+}
+
+/* Reset CSS */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Utility classes */
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Icons */
+.icon {
+&.search::before {
+     content: '🔍';
+ }
+
+&.arrow::before {
+     content: '→';
+ }
+}
+
+
