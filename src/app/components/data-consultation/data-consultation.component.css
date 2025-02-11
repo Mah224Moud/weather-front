@@ -1,0 +1,106 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
+    height: 100%; /* Ajouté */
+    margin: 0; /* Ajouté pour enlever la marge par défaut du body */
+  }
+  
+  /* Conteneur principal */
+  .container {
+    max-width: 80%;
+    min-height: 100%; /* Ajouté pour que le conteneur prenne toute la hauteur */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    background: white;
+    margin-top: 40px;
+  }
+  
+  /* Ajouter le style pour s'assurer que l'élément parent prenne toute la hauteur de l'écran */
+  html, body {
+    height: 100%; /* Ajouté pour s'assurer que le body prenne toute la hauteur */
+  }
+  
+  h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  h3 .badge {
+    font-size: 16px;
+    padding: 10px;
+  }
+  
+  input.form-control {
+    border-radius: 25px;
+    padding: 10px 15px;
+  }
+  
+  input.ng-invalid.ng-touched {
+    border: 2px solid red;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 25px;
+    font-size: 16px;
+    transition: 0.3s;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+  
+  .list-group-item {
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  
+  .list-group-item:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .table-container {
+    max-height: 100%;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+  }
+  
+  .table {
+    background: white;
+    width: 100%; 
+    table-layout: auto; 
+  }
+  
+  .table th, .table td {
+    word-wrap: break-word; 
+    padding: 12px; 
+    table-layout: auto; 
+  }
+  
+  .table-responsive {
+    overflow-x: auto; 
+  }
+  
+  
+  .table thead {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .table tbody tr:hover {
+    background: #f8f9fa;
+    transition: 0.3s;
+  }
+  
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  

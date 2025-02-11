@@ -12,6 +12,7 @@ export class DataService {
   private apiInfoCity =  "http://172.31.60.248:8080/api/donnees-climatiques/info/"
   private apiYearlyStat = "http://172.31.60.248:8080/api/donnees-climatiques/moyenneAll/"
   private apiUrl = 'http://localhost:11434/api/generate';
+  private apiUrl_donneclimatique = 'http://172.31.60.248:8080/api/donnees-climatiques'
 
   constructor(private http: HttpClient) {}
  
@@ -136,6 +137,24 @@ export class DataService {
     }
     
     return buffer;
+  }
+
+
+
+  rechercherEntreDates(Ville: string, dateDebut: string, dateFin: string): Observable<any> {
+    return this.http.get(`${this.apiUrl_donneclimatique}/villedate/${Ville}?dateDebut=${dateDebut}&dateFin=${dateFin}`);
+  }
+  
+  rechercherApresDate(Ville: string,dateDebut: string): Observable<any> {
+    return this.http.get(`${this.apiUrl_donneclimatique}/villedate/${Ville}?dateDebut=${dateDebut}`);
+  }
+
+  rechercherAvantDate(Ville: string, dateFin: string): Observable<any> {
+    return this.http.get(`${this.apiUrl_donneclimatique}/villedate/${Ville}?dateFin=${dateFin}`);
+  }
+
+  getApidata() : Observable<any> {
+    return this.http.get(this.apiUrl_donneclimatique);
   }
   
 }
