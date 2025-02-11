@@ -24,13 +24,7 @@
         </li>
         <li class="nav-item">
           <a href="/interfacemeteo" class="nav-link">Météo</a>
-        </li>
-        <li class="nav-item">
-          <a href="/download" class="nav-link">Extraction</a>
-        </li>
-        <li class="nav-item">
-          <a href="/help" class="nav-link">Aide</a>
-        </li>
+        </li>  
       </ul>
 
 
@@ -42,47 +36,4 @@
 </nav>
 
 
-<!--<nav class="nav-container">-->
-<!--    <div class="nav-content">-->
-<!--        &lt;!&ndash; Logo and Brand &ndash;&gt;-->
-<!--        <a href="/" class="brand-container">-->
-<!--            <img src="/assets/img/logo/logo-meteo.png" class="brand-logo" alt="Logo Météo" />-->
-<!--            <span class="brand-text">iMétéo</span>-->
-<!--        </a>-->
-
-<!--        &lt;!&ndash; Mobile Menu Button &ndash;&gt;-->
-<!--        <button class="menu-button" (click)="toggleMenu()" [class.active]="isMenuOpen"  data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">-->
-<!--            <span class="menu-icon"></span>-->
-<!--        </button>-->
-
-<!--        &lt;!&ndash; Navigation Items &ndash;&gt;-->
-<!--        <div class="nav-items collapse navbar-collapse" id="navbarSupportedContent" [class.open]="isMenuOpen">-->
-<!--            <ul class="nav-list">-->
-<!--                <li><a href="/data-consultation" class="nav-link">Consultation des données</a></li>-->
-<!--                <li><a href="/visualization" class="nav-link">Visualisations</a></li>-->
-<!--                <li><a href="/interfacemeteo" class="nav-link">Météo</a></li>-->
-<!--                <li><a href="/download" class="nav-link">Extraction</a></li>-->
-<!--                <li><a href="/help" class="nav-link">Aide</a></li>-->
-<!--            </ul>-->
-
-<!--            &lt;!&ndash; Search Bar &ndash;&gt;-->
-<!--            <div class="search-container">-->
-<!--                <input-->
-<!--                        type="text"-->
-<!--                        class="search-input"-->
-<!--                        [@searchAnimation]="isSearchActive ? 'visible' : 'hidden'"-->
-<!--                        [(ngModel)]="searchQuery"-->
-<!--                        (keydown.enter)="submitSearch()"-->
-<!--                        placeholder="Rechercher..."-->
-<!--                >-->
-<!--                <button class="search-button" (click)="toggleSearch()">-->
-<!--                    <i class="icon" [class.search]="!isSearchActive" [class.arrow]="isSearchActive"></i>-->
-<!--                </button>-->
-<!--            </div>-->
-
-<!--            &lt;!&ndash; Login Button &ndash;&gt;-->
-<!--            <a href="/login" class="login-button">Connexion</a>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</nav>-->
 <router-outlet></router-outlet>
