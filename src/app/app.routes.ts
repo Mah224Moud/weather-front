@@ -6,7 +6,7 @@ import { VisualizationComponent } from './components/visualization/visualization
 import { DownloadComponent } from './components/download/download.component';
 import { HelpComponent } from './components/help/help.component';
 import {InterfacemeteoComponent} from './components/interfacemeteo/interfacemeteo.component';
-import { LlmComponent } from './llm/llm.component';
+import { LlmComponent } from './components/llm/llm.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DataService } from '../data.service';
+import { DataService } from '../../data.service';
 import marked from 'marked';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
