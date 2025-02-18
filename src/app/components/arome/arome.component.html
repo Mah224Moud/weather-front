@@ -1,2 +1,60 @@
-<p>arome works!</p>
+<section class="container d-flex align-items-center justify-content-around mb-5">
+    <div class="d-flex align-items-center">
+      <div class="search-wrapper">
+        <div class="search-container">
+          <input
+            type="text"
+            class="search-input"
+            [(ngModel)]="searchCity"
+            (input)="onSearchInput()"
+            placeholder="Rechercher une ville..."
+          />
+          
+          <button *ngIf="searchCity" class="clear-btn" (click)="clearSearch()">
+            ✖
+          </button>
+        </div>
+        @if (showSuggestions && filteredCities.length > 0) {
+          <div class="suggestions-container">
+            @for (city of filteredCities; track city.ville) {
+              <div 
+                class="suggestion-item"
+                (click)="selectCity(city)"
+              >
+                {{ city.ville }}
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <label for="layerSelect">Sélectionner une couche :</label>
+<select id="layerSelect" [(ngModel)]="selectedLayer" (change)="generate_map(0.5, infoCity, selectedLayer)">
+  <option *ngFor="let layer of layers" [value]="layer.valeur">
+    {{ layer.cle }}
+  </option>
+</select>
+
+
+    <div>
+      <div class="popover__wrapper">
+        <div href="#">
+          <div class="weather-card">
+            <div>Ville: <span class="fw-bold">{{infoCity.ville}}</span></div>
+            <div>N° station: <span class="fw-bold">{{infoCity.numeroStation}}</span></div>
+            <div>Coordonnées:
+              <span class="fw-bold">
+                <a [href]="'https://www.google.com/maps?q=' + infoCity.latitude + ',' + infoCity.longitude" 
+                target="_blank" 
+                style="text-decoration: none; color: blue;">
+               {{ infoCity.latitude }}, {{ infoCity.longitude }}
+             </a>
+            </span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 <div id="map"></div>
