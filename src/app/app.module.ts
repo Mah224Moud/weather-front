@@ -8,10 +8,11 @@ import {CommonModule} from '@angular/common';
 import {DataService} from './data.service';  // Exemple
 import { FormsModule } from '@angular/forms';
 import { InterfacemeteoComponent } from './components/interfacemeteo/interfacemeteo.component';  // Importer FormsModule ici
-
+import { DataConsultationComponent } from './components/data-consultation/data-consultation.component';
 @NgModule({
   declarations: [
     AppComponent,
+    DataConsultationComponent,
     VisualizationComponent,  // Assurez-vous que vos composants sont déclarés ici
     InterfacemeteoComponent
   ],

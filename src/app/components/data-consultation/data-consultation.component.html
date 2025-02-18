@@ -67,7 +67,13 @@
             type="checkbox" 
             id="{{ col.key }}" 
             [(ngModel)]="selectedColumns[col.key]">
-          <label class="form-check-label" for="{{ col.key }}">{{ col.label }}</label>
+            <label 
+            class="form-check-label" 
+            for="{{ col.key }}" 
+            data-bs-toggle="tooltip" 
+            title="{{ col.description }}">
+            {{ col.label }}
+          </label>
         </div>
       </div>
     </div>

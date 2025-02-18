@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../../data.service';
@@ -7,6 +7,8 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DecimalPipe } from '@angular/common';
 
+declare var bootstrap: any;
+
 @Component({
   selector: 'app-data-consultation',
   standalone: true,
@@ -14,7 +16,10 @@ import { DecimalPipe } from '@angular/common';
   styleUrls: ['./data-consultation.component.css'],
   imports: [NgIf, NgFor, FormsModule, NgxPaginationModule,DecimalPipe], 
 })
-export class DataConsultationComponent implements OnInit {
+
+
+
+export class DataConsultationComponent implements OnInit, AfterViewInit {
   total: number = 0;
   dateDebut: string = '';
   dateFin: string = '';
@@ -34,31 +39,31 @@ export class DataConsultationComponent implements OnInit {
   selectedFormat: string = 'json'; 
   
   availableColumns = [
-    { key: 'id', label: 'ID' },
-    { key: 'numer_sta', label: 'NUMER_STA' },
-    { key: 'date', label: 'Date' },
-    { key: 'pmer', label: 'PMER' },
-    { key: 'tend', label: 'TEND' },
-    { key: 'cod_tend', label: 'COD_TEND' },
-    { key: 'dd', label: 'DD' },
-    { key: 'ff', label: 'FF' },
-    { key: 't', label: 'T' },
-    { key: 'td', label: 'TD' },
-    { key: 'u', label: 'U' },
-    { key: 'vv', label: 'VV' },
-    { key: 'ww', label: 'WW' },
-    { key: 'n', label: 'N' },
-    { key: 'nbas', label: 'NBAS' },
-    { key: 'hbas', label: 'HBAS' },
-    { key: 'pres', label: 'PRES' },
-    { key: 'tend24', label: 'TEND24' },
-    { key: 'tn12', label: 'TN12' },
-    { key: 'tx12', label: 'TX12' },
-    { key: 'tminsol', label: 'TMINSOL' },
-    { key: 'raf10', label: 'RAF10' },
-    { key: 'rafper', label: 'RAFPER' },
-    { key: 'per', label: 'PER' },
-    { key: 'rr12', label: 'RR12' }
+    { key: 'id', label: 'ID', description: 'Identifiant unique' },
+    { key: 'numer_sta', label: 'NUMER_STA', description: 'Numéro de la station' },
+    { key: 'date', label: 'Date', description: 'Date de la mesure' },
+    { key: 'pmer', label: 'PMER', description: 'Pression au niveau de la mer' },
+    { key: 'tend', label: 'TEND', description: 'Tendance barométrique' },
+    { key: 'cod_tend', label: 'COD_TEND', description: 'Code de tendance' },
+    { key: 'dd', label: 'DD', description: 'Direction du vent' },
+    { key: 'ff', label: 'FF', description: 'Vitesse du vent' },
+    { key: 't', label: 'T', description: 'Température' },
+    { key: 'td', label: 'TD', description: 'Température du point de rosée' },
+    { key: 'u', label: 'U', description: 'Humidité relative' },
+    { key: 'vv', label: 'VV', description: 'Visibilité horizontale' },
+    { key: 'ww', label: 'WW', description: 'Temps significatif' },
+    { key: 'n', label: 'N', description: 'Nébulosité totale' },
+    { key: 'nbas', label: 'NBAS', description: 'Nébulosité des nuages bas' },
+    { key: 'hbas', label: 'HBAS', description: 'Hauteur de la base des nuages' },
+    { key: 'pres', label: 'PRES', description: 'Pression atmosphérique' },
+    { key: 'tend24', label: 'TEND24', description: 'Évolution de pression en 24h' },
+    { key: 'tn12', label: 'TN12', description: 'Température minimale sur 12h' },
+    { key: 'tx12', label: 'TX12', description: 'Température maximale sur 12h' },
+    { key: 'tminsol', label: 'TMINSOL', description: 'Température minimale du sol' },
+    { key: 'raf10', label: 'RAF10', description: 'Rafale maximale en 10 minutes' },
+    { key: 'rafper', label: 'RAFPER', description: 'Période de rafale' },
+    { key: 'per', label: 'PER', description: 'Période observée' },
+    { key: 'rr12', label: 'RR12', description: 'Précipitations sur 12h' }
   ];
   
   selectedColumns: { [key: string]: boolean } = {
@@ -81,6 +86,10 @@ export class DataConsultationComponent implements OnInit {
     this.loadTotal();
   }
 
+  ngAfterViewInit(): void {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
+  }
   private loadTotal(): void {
     this.dataService.getTotal().subscribe({
       next: (response) => {
