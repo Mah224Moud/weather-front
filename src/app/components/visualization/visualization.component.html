@@ -61,16 +61,17 @@
     </div>
   </section>                
   
-
-  <div class="container d-flex justify-content-center">
+  <div class="container d-flex flex-column align-items-center">
     <div *ngIf="isLoading" class="spinner-container d-flex flex-column">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Chargement...</span>
       </div>
-      <span class="">Chargement...</span>
+      <span>Chargement...</span>
     </div>
   
+
     <div *ngIf="!isLoading && data.length > 0">
+      <h2 class="text-center">Évolution des observations climatiques de 1996 à maintenant</h2>
       <ngx-charts-line-chart 
         [view]="view"
         [results]="data"
@@ -83,15 +84,39 @@
         [showYAxisLabel]="showYAxisLabel"
         [xAxisLabel]="xAxisLabel"
         [yAxisLabel]="yAxisLabel"
-        [autoScale]="true"
-      >
+        [autoScale]="true">
       </ngx-charts-line-chart>
     </div>
   
+
     <div *ngIf="!isLoading && data.length === 0" class="no-data">
-      <p>Aucune donnée à afficher.</p>
+      <p>Aucune donnée annuelle à afficher.</p>
     </div>
+    <div *ngIf="!isLoading && weeklyData.length > 0">
+      <h2 class="text-center mt-4">Données hebdomadaires pour {{ selectedYear }}</h2>
+      <ngx-charts-line-chart 
+        [view]="view"
+        [results]="weeklyData"
+        [scheme]="'vivid'"
+        [gradient]="gradient"
+        [xAxis]="showXAxis"
+        [yAxis]="showYAxis"
+        [legend]="showLegend"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        [xAxisLabel]="'Semaine'"
+        [yAxisLabel]="'Valeurs'"
+        [autoScale]="true">
+      </ngx-charts-line-chart>
+    </div>
+
+    <div *ngIf="!isLoading && weeklyData.length === 0" class="no-data">
+      <p>Aucune donnée hebdomadaire disponible pour {{ selectedYear }}.</p>
+    </div>
+  
   </div>
+  
+  
   
   
 </div>

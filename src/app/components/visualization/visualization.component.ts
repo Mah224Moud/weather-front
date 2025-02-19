@@ -22,6 +22,11 @@ export class VisualizationComponent implements OnInit {
   showSuggestions: boolean = false;
   filteredCities: City[] = [];
   infoCity: City = { id: 0, numeroStation: 0, ville: '', latitude: 0, longitude: 0, altitude: 0 };
+  num_stat = 0;
+
+
+  weeklyData: any[] = [];
+  rawWeeklyData: any[] = [];
 
   view: [number, number] = [window.innerWidth * 0.9, 600]; 
   showXAxis = true;
@@ -73,6 +78,7 @@ export class VisualizationComponent implements OnInit {
   
   onYearChange(event: any) {
     this.selectedYear = event.target.value;
+    this.generateWeeklyChart(this.infoCity.numeroStation, this.selectedYear);
   }
 
   private updateChart() {
@@ -111,6 +117,51 @@ clearSearch() {
     });
   }
 
+  private getWeeklyStats(num_station: number, year: number): void {
+    this.dataService.getWeeklyStats(num_station, year).subscribe({
+      next: (response: any) => {
+        this.rawWeeklyData = response;
+        console.log("Chargement des données hebdomadaire: ", this.rawWeeklyData);
+      },
+      error: (err) => {
+        console.error('Erreur:', err);
+      }
+    });
+  }
+
+  private updateWeeklyChart() {
+    if (!this.rawWeeklyData || this.rawWeeklyData.length === 0) {
+      console.warn("❌ Données hebdomadaires non disponibles !");
+      return;
+    }
+  
+    const keyMapping: Record<string, string> = {
+      moyenneTemp: "Température Moyenne",
+      moyenneVitesseVent: "Vitesse Moyenne du Vent",
+      moyennePrecip12: "Précipitations Moyennes",
+      moyenneRafale10: "Rafales de Vent Moyennes"
+    };
+  
+    this.weeklyData = Object.keys(keyMapping).map(key => ({
+      name: keyMapping[key],
+      series: this.rawWeeklyData
+        .filter(item => item.hasOwnProperty(key))
+        .map(item => ({
+          name: `Semaine ${item.semaine}`,
+          value: item[key as keyof typeof this.rawWeeklyData[0]] ?? 0
+        }))
+    }));
+}
+
+
+
+  
+  
+  
+  
+
+  
+
 
     private getLocations(): void {
       this.dataService.getLocalisations().subscribe({
@@ -123,6 +174,7 @@ clearSearch() {
             this.searchCity =  c .ville;
             this.infoCity = c;
             this.generateChart(c.numeroStation);
+            this.generateWeeklyChart(c.numeroStation, this.selectedYear);
           }
         },
         error: (err) => {
@@ -142,11 +194,22 @@ clearSearch() {
         this.filteredCities = [];
       }
     }
+
+    generateWeeklyChart(num_station: number, year: number){
+      this.isLoading = true;
+      this.getWeeklyStats(num_station, year);
+    
+      setTimeout(() => {
+      this.updateWeeklyChart();
+      this.isLoading = false;
+      },1000);
+    }
   
     selectCity(city: City) {
       this.searchCity = city.ville;
       this.showSuggestions = false;
       this.infoCity = city;
       this.generateChart(city.numeroStation);
+      this.generateWeeklyChart(city.numeroStation, this.selectedYear);
     }
 }

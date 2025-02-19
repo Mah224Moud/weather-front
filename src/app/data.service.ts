@@ -13,6 +13,7 @@ export class DataService {
   private apiYearlyStat = "http://172.31.60.248:8080/api/donnees-climatiques/moyenneAll/"
   private apiUrl = 'http://localhost:11434/api/generate';
   private apiUrl_donneclimatique = 'http://172.31.60.248:8080/api/donnees-climatiques'
+  private apiWeeklyStat= "http://172.31.60.248:8080/api/donnees-climatiques/moyennes/"
 
   constructor(private http: HttpClient) {}
  
@@ -49,6 +50,10 @@ export class DataService {
   
   getYearlyStats(numStation: number): Observable<any> {
     return this.http.get(this.apiYearlyStat+numStation);
+  }
+
+  getWeeklyStats(numStation: number, year: number): Observable<any> {
+    return this.http.get(this.apiWeeklyStat+numStation+"?annee="+year);
   }
 
 
