@@ -51,6 +51,17 @@ export class AromeComponent implements OnInit {
   }
 
 
+  private initMap(): void {
+    this.map = L.map('map', {
+      center: [46.603354, 1.888334],
+      zoom: 6
+    });
+  
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(this.map);
+  }
+  
 
   private getLocations(): void {
     this.dataService.getLocalisations().subscribe({
@@ -101,11 +112,26 @@ export class AromeComponent implements OnInit {
     console.log(city.numeroStation)
   }
 
+  updatePins(){
+    let bounds = L.latLngBounds([]);
+
+        this.cities.forEach(city => {
+          if (city.ville !== "FRANCE") {
+            let marker = L.marker([city.latitude, city.longitude])
+              .addTo(this.map)
+              .bindPopup(`<b>${city.ville}</b>`);
+            
+            bounds.extend(marker.getLatLng());
+          }
+        });
+  }
+
   generate_map(bounds: number, city: City, layer: string){
     if (this.map) {
       this.map.remove();
   }
-    this.map = L.map('map').setView([46.767834, 4.588333], 6);
+
+  this.map = L.map('map').setView([46.767834, 4.588333], 6);
 
     if (city.ville === "FRANCE") {
       this.arome = {
@@ -150,6 +176,8 @@ export class AromeComponent implements OnInit {
       }, error => {
         console.error("Erreur lors du chargement de la couche WMS :", error);
       });
+
+      this.updatePins();
   }
 
   clearSearch() {
