@@ -1,23 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../../data.service';
 import marked from 'marked';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-llm',
   imports: [CommonModule, FormsModule],
   templateUrl: './llm.component.html',
-  styleUrl: './llm.component.css'
+  styleUrls: ['./llm.component.css']
 })
-export class LlmComponent {
+export class LlmComponent implements AfterViewChecked {
   userMessage: string = '';
   response: string = '';
   isWaiting = false;
+  messages: { content: string, type: string }[] = [];
   sanitizedResponse: SafeHtml = '';
 
+  @ViewChild('conversationContainer') private conversationContainer!: ElementRef;
+
   constructor(
+    private http: HttpClient,
     private service: DataService,
     private sanitizer: DomSanitizer
   ) {}
@@ -28,23 +33,54 @@ export class LlmComponent {
     );
   }
 
+  ngOnInit(): void {
+  }
+
   sendMessage() {
     if (!this.userMessage.trim()) return;
-    
-    this.response = '';
+
+    this.messages.push({ content: this.userMessage, type: 'user' });
     this.isWaiting = true;
-    
+    this.response = '';
+
+    const botMessageIndex = this.messages.push({ content: '', type: 'bot' }) - 1;
+
     this.service.sendMessage(this.userMessage).subscribe({
       next: (chunk) => {
-        this.isWaiting = false;
         this.response += chunk;
+        this.messages[botMessageIndex].content = this.response;
       },
       error: (err) => {
         this.isWaiting = false;
-        this.response = 'Erreur lors de la communication';
         console.error(err);
       },
-      complete: () => this.isWaiting = false
+      complete: () => {
+        this.isWaiting = false;
+        console.log("Message final = " + this.response);
+        console.log("input final = " + this.messages[botMessageIndex-1].content);
+        this.service.saveConversation(this.messages[botMessageIndex-1].content, this.response);
+      }
     });
+
+    this.userMessage = '';
+  }
+
+  sanitizeMessage(content: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(
+      marked.parse(content)
+    );
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  private scrollToBottom(): void {
+    try {
+      const container = this.conversationContainer.nativeElement;
+      container.scrollTop = container.scrollHeight;
+    } catch (err) {
+      console.error('Erreur de défilement:', err);
+    }
   }
 }

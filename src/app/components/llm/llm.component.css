@@ -1,26 +1,74 @@
-.response-box {
-    min-height: 200px;
-    border: 1px solid #ccc;
-    border-radius: 15px;
-    padding: 10px;
-    margin-bottom: 10px;
-    overflow-x: hidden; 
-    overflow-y: auto;  
-    white-space: pre-wrap;
-    word-wrap: break-word;
+.chat-container {
+  position: relative;
+  height: 100vh; 
 }
-  
-  .loading {
-    color: #666;
-    font-style: italic;
-  }
 
-textarea{
-    resize: none;
-    width: 400px;
-    padding: 10px;
-    border-radius: 15px;
+.conversation-container {
+  max-height: calc(100vh - 150px); /* Hauteur dynamique en fonction de la taille de l'écran */
+  overflow-y: auto; /* Ajoute une barre de défilement verticale */
+  padding: 20px; /* Espacement intérieur */
+  background-color: #ffffff; /* Arrière-plan de la conversation */
+  margin: 0 20px; /* Marges à gauche et à droite (ajuster selon tes besoins) */
+  border-radius: 10px; /* Arrondir les coins pour un effet esthétique */
 }
+
+
+.input-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px; 
+  background-color: white;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px; 
+}
+
+textarea {
+  width: 80%;
+  height: 90px; 
+  padding: 12px; 
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+}
+
 button {
-    width: 200px;
+  padding: 12px 24px; 
+  border-radius: 8px;
+  font-size: 16px; 
+}
+
+
+.loading {
+  font-size: 16px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.user-message, .bot-message {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+}
+
+.user-message {
+  background-color: #007bff;
+  color: white;
+  text-align: right;
+}
+
+.bot-message {
+  background-color: #f1f1f1;
+  color: #333;
+  text-align: left;
+}
+
+.user-message div, .bot-message div {
+  display: inline-block;
+  max-width: 80%;
+  word-wrap: break-word;
 }
