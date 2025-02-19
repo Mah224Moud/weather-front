@@ -108,6 +108,21 @@
         [yAxisLabel]="'Valeurs'"
         [autoScale]="true">
       </ngx-charts-line-chart>
+
+
+  <hr class="mt-4">
+  <hr class="mt-4">
+
+      <div>
+        <h2 class="text-center mt-4">Comparaison des températures de toutes les stations de 1996 et 2024</h2>
+        <ngx-charts-advanced-pie-chart
+        [view]="view"
+        [scheme]="'vivid'"
+        [results]="pieChartData"
+        [gradient]="true"
+        [tooltipDisabled]="false">
+      </ngx-charts-advanced-pie-chart>
+      </div>
     </div>
 
     <div *ngIf="!isLoading && weeklyData.length === 0" class="no-data">
@@ -115,8 +130,4 @@
     </div>
   
   </div>
-  
-  
-  
-  
 </div>

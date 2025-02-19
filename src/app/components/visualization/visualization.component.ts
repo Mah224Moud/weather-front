@@ -42,6 +42,9 @@ export class VisualizationComponent implements OnInit {
   years: number[] = [];
   selectedYear: number = new Date().getFullYear();
 
+  averge: any[] = [];
+  pieChartData: any[] = [];
+
 
   constructor(private dataService: DataService) {}
 
@@ -49,6 +52,7 @@ export class VisualizationComponent implements OnInit {
     this.getLocations();
     window.addEventListener('resize', this.onResize);
     this.populateYears();
+    this.getAvergeStats();
   }
 
   onResize = () => {
@@ -117,6 +121,50 @@ clearSearch() {
     });
   }
 
+  private getAvergeStats(): void {
+    this.dataService.getAvergeStats().subscribe({
+      next: (response: any) => {
+        this.averge = response;
+        console.log("Données moyennes", this.averge)
+        this.preparePieChartData();
+        //this.prepareLineChartData();
+      },
+      error: (err) => console.error('Erreur:', err)
+    });
+  }
+
+  preparePieChartData() {
+    const categories = {
+      "Baisse significative (< 0°C)": 0,
+      "Stable ou légère hausse (0°C à 1°C)": 0,
+      "Hausse modérée (1°C à 2°C)": 0,
+      "Hausse marquée (2°C à 3°C)": 0,
+      "Forte hausse (> 3°C)": 0
+    };
+  
+    this.averge.forEach((station) => {
+      const delta = station.deltaTemp1996vs2024;
+      
+      if (delta < 0) {
+        categories["Baisse significative (< 0°C)"]++;
+      } else if (delta >= 0 && delta < 1) {
+        categories["Stable ou légère hausse (0°C à 1°C)"]++;
+      } else if (delta >= 1 && delta < 2) {
+        categories["Hausse modérée (1°C à 2°C)"]++;
+      } else if (delta >= 2 && delta < 3) {
+        categories["Hausse marquée (2°C à 3°C)"]++;
+      } else {
+        categories["Forte hausse (> 3°C)"]++;
+      }
+    });
+  
+    this.pieChartData = Object.keys(categories).map((key) => ({
+      name: key,
+      value: (categories as any)[key]
+
+    }));
+  }
+  
   private getWeeklyStats(num_station: number, year: number): void {
     this.dataService.getWeeklyStats(num_station, year).subscribe({
       next: (response: any) => {
