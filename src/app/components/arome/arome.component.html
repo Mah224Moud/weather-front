@@ -1,5 +1,5 @@
 <section class="container d-flex align-items-center justify-content-around mb-5">
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center mt-5">
       <div class="search-wrapper">
         <div class="search-container">
           <input
@@ -28,14 +28,14 @@
         }
       </div>
     </div>
-
-    <label for="layerSelect">Sélectionner une couche :</label>
-<select id="layerSelect" [(ngModel)]="selectedLayer" (change)="generate_map(0.5, infoCity, selectedLayer)">
-  <option *ngFor="let layer of layers" [value]="layer.valeur">
-    {{ layer.cle }}
-  </option>
-</select>
-
+    <div class="d-flex flex-column justify-content-center">
+      <label for="layerSelect">Sélectionner une couche :</label>
+      <select id="layerSelect" class="rounded text-uppercase" [(ngModel)]="selectedLayer" (change)="generate_map(0.5, infoCity, selectedLayer)">
+        <option *ngFor="let layer of layers" [value]="layer.valeur">
+          {{ layer.cle }}
+        </option>
+      </select>
+    </div>
 
     <div>
       <div class="popover__wrapper">
