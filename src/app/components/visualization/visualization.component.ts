@@ -23,7 +23,7 @@ export class VisualizationComponent implements OnInit {
   filteredCities: City[] = [];
   infoCity: City = { id: 0, numeroStation: 0, ville: '', latitude: 0, longitude: 0, altitude: 0 };
 
-  view: [number, number] = [1000, 600]; 
+  view: [number, number] = [window.innerWidth * 0.9, 600]; 
   showXAxis = true;
   showYAxis = true;
   gradient = false;
@@ -34,11 +34,24 @@ export class VisualizationComponent implements OnInit {
   yAxisLabel = 'Valeurs';
 
 
+  years: number[] = [];
+  selectedYear: number = new Date().getFullYear();
+
 
   constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
     this.getLocations();
+    window.addEventListener('resize', this.onResize);
+    this.populateYears();
+  }
+
+  onResize = () => {
+    this.view = [window.innerWidth * 0.9, 600]; 
+  };
+  
+  ngOnDestroy(): void {
+    window.removeEventListener('resize', this.onResize);
   }
 
 
@@ -50,6 +63,16 @@ export class VisualizationComponent implements OnInit {
     this.updateChart();
     this.isLoading = false;
     },1000);
+  }
+
+  populateYears() {
+    const startYear = 1996;
+    const currentYear = new Date().getFullYear();
+    this.years = Array.from({ length: currentYear - startYear + 1 }, (_, i) => startYear + i);
+  }
+  
+  onYearChange(event: any) {
+    this.selectedYear = event.target.value;
   }
 
   private updateChart() {
@@ -125,7 +148,5 @@ clearSearch() {
       this.showSuggestions = false;
       this.infoCity = city;
       this.generateChart(city.numeroStation);
-
-      console.log(city.numeroStation)
     }
 }

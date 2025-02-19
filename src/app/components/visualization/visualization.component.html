@@ -3,7 +3,7 @@
 
 
   <section class="container d-flex align-items-center justify-content-around mb-5">
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center mt-4">
       <div class="search-wrapper">
         <div class="search-container">
           <input
@@ -31,6 +31,14 @@
           </div>
         }
       </div>
+    </div>
+
+    <div>
+      <label for="yearSelect" class="me-3 fw-bold">Sélectionner une année :</label>
+      <select class="rounded fw-bold fs-5" id="yearSelect" [(ngModel)]="selectedYear" (change)="onYearChange($event)">
+        <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+      </select>
+
     </div>
 
     <div>
@@ -62,7 +70,7 @@
       <span class="">Chargement...</span>
     </div>
   
-    <div *ngIf="!isLoading && data.length > 0" class="w-100">
+    <div *ngIf="!isLoading && data.length > 0">
       <ngx-charts-line-chart 
         [view]="view"
         [results]="data"
