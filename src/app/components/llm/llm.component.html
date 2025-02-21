@@ -24,9 +24,9 @@
   </div>
 
   <!-- Zone d'entrée de message et bouton envoyer -->
-  <div class="input-container">
+  <div class="input-container bg-dark">
     <textarea [(ngModel)]="userMessage" placeholder="Posez votre question..." (keyup.enter)="sendMessage()" [disabled]="isWaiting"> </textarea>
-    <button (click)="sendMessage()" class="btn btn-outline-primary" [disabled]="isWaiting">Envoyer</button>
+    <button (click)="sendMessage()" class="btn btn-outline-light" [disabled]="isWaiting">Envoyer</button>
   </div>
 </div>
 

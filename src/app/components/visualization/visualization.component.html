@@ -70,7 +70,7 @@
     </div>
   
 
-    <div *ngIf="!isLoading && data.length > 0">
+    <div *ngIf="!isLoading && data.length > 0" class="d-flex flex-column justify-content-center align-items-center">
       <h2 class="text-center">Évolution des observations climatiques de 1996 à maintenant</h2>
       <ngx-charts-line-chart 
         [view]="view"
@@ -86,12 +86,23 @@
         [yAxisLabel]="yAxisLabel"
         [autoScale]="true">
       </ngx-charts-line-chart>
-    </div>
-  
 
+      <div class="mt-5">
+        <h2>Resumé Évolution climatique de 1996 à maintenant</h2>
+        <ngx-charts-number-card 
+        [view]="[1000, 300]" 
+        [results]="extremeData"
+        [cardColor]="'#f1f1f1'"
+        [textColor]="'#333'"
+        [scheme]="'vivid'">
+      </ngx-charts-number-card>
+      </div>
     <div *ngIf="!isLoading && data.length === 0" class="no-data">
       <p>Aucune donnée annuelle à afficher.</p>
     </div>
+
+   
+
     <div *ngIf="!isLoading && weeklyData.length > 0">
       <h2 class="text-center mt-4">Données hebdomadaires pour {{ selectedYear }}</h2>
       <ngx-charts-line-chart 
@@ -108,8 +119,6 @@
         [yAxisLabel]="'Valeurs'"
         [autoScale]="true">
       </ngx-charts-line-chart>
-
-
   <hr class="mt-4">
   <hr class="mt-4">
 

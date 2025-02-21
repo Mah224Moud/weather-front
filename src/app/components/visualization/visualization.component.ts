@@ -44,6 +44,7 @@ export class VisualizationComponent implements OnInit {
 
   averge: any[] = [];
   pieChartData: any[] = [];
+  extremeData: any[] = [];
 
 
   constructor(private dataService: DataService) {}
@@ -70,6 +71,7 @@ export class VisualizationComponent implements OnInit {
   
     setTimeout(() => {
     this.updateChart();
+    this.updateExtremeChart();
     this.isLoading = false;
     },1000);
   }
@@ -101,12 +103,30 @@ export class VisualizationComponent implements OnInit {
     console.log("Graphique mis à jour", this.data);
 }
 
-  
-clearSearch() {
-  this.searchCity = '';
-  this.filteredCities = [];
-  this.showSuggestions = false;
-}
+  private updateExtremeChart() {
+    const rData = this.rawData.filter(data => data.annee !== 2025);
+    const maxTemp = rData.reduce((prev, curr) => (curr.temperature > prev.temperature ? curr : prev));
+    const minTemp = rData.reduce((prev, curr) => (curr.temperature < prev.temperature ? curr : prev));
+
+    const maxPrec = rData.reduce((prev, curr) => (curr.precipitation > prev.precipitation ? curr : prev));
+    const minPrec = rData.reduce((prev, curr) => (curr.precipitation < prev.precipitation ? curr : prev));
+
+    this.extremeData = [
+      { name: `Température Max (${maxTemp.annee})`, value: Math.round(maxTemp.temperature) },
+      { name: `Température Min (${minTemp.annee})`, value: Math.round(minTemp.temperature) },
+      { name: `Précipitation Max (${maxPrec.annee})`, value: Math.round(maxPrec.precipitation / 10) },
+      { name: `Précipitation Min (${minPrec.annee})`, value: Math.round(minPrec.precipitation / 10) }
+    ];
+    
+
+    console.log("Graphique extrême mis à jour", this.extremeData);
+  }
+    
+  clearSearch() {
+    this.searchCity = '';
+    this.filteredCities = [];
+    this.showSuggestions = false;
+  }
   
 
   private getYearlyStats(num_station: number): void {
@@ -127,7 +147,6 @@ clearSearch() {
         this.averge = response;
         console.log("Données moyennes", this.averge)
         this.preparePieChartData();
-        //this.prepareLineChartData();
       },
       error: (err) => console.error('Erreur:', err)
     });
@@ -200,16 +219,6 @@ clearSearch() {
         }))
     }));
 }
-
-
-
-  
-  
-  
-  
-
-  
-
 
     private getLocations(): void {
       this.dataService.getLocalisations().subscribe({
