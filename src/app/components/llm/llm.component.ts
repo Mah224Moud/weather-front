@@ -1,25 +1,31 @@
-import { Component, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { DataService } from '../../data.service';
-import marked from 'marked';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { HttpClient } from '@angular/common/http';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  AfterViewChecked,
+} from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { DataService } from "../../data.service";
+import marked from "marked";
+import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
-  selector: 'app-llm',
+  selector: "app-llm",
   imports: [CommonModule, FormsModule],
-  templateUrl: './llm.component.html',
-  styleUrls: ['./llm.component.css']
+  templateUrl: "./llm.component.html",
+  styleUrls: ["./llm.component.css"],
 })
 export class LlmComponent implements AfterViewChecked {
-  userMessage: string = '';
-  response: string = '';
+  userMessage: string = "";
+  response: string = "";
   isWaiting = false;
-  messages: { content: string, type: string }[] = [];
-  sanitizedResponse: SafeHtml = '';
+  messages: { content: string; type: string }[] = [];
+  sanitizedResponse: SafeHtml = "";
 
-  @ViewChild('conversationContainer') private conversationContainer!: ElementRef;
+  @ViewChild("conversationContainer")
+  private conversationContainer!: ElementRef;
 
   constructor(
     private http: HttpClient,
@@ -28,22 +34,20 @@ export class LlmComponent implements AfterViewChecked {
   ) {}
 
   get formattedResponse(): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(
-      marked.parse(this.response)
-    );
+    return this.sanitizer.bypassSecurityTrustHtml(marked.parse(this.response));
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   sendMessage() {
     if (!this.userMessage.trim()) return;
 
-    this.messages.push({ content: this.userMessage, type: 'user' });
+    this.messages.push({ content: this.userMessage, type: "user" });
     this.isWaiting = true;
-    this.response = '';
+    this.response = "";
 
-    const botMessageIndex = this.messages.push({ content: '', type: 'bot' }) - 1;
+    const botMessageIndex =
+      this.messages.push({ content: "", type: "bot" }) - 1;
 
     this.service.sendMessage(this.userMessage).subscribe({
       next: (chunk) => {
@@ -57,18 +61,21 @@ export class LlmComponent implements AfterViewChecked {
       complete: () => {
         this.isWaiting = false;
         console.log("Message final = " + this.response);
-        console.log("input final = " + this.messages[botMessageIndex-1].content);
-        this.service.saveConversation(this.messages[botMessageIndex-1].content, this.response);
-      }
+        console.log(
+          "input final = " + this.messages[botMessageIndex - 1].content
+        );
+        this.service.saveConversation(
+          this.messages[botMessageIndex - 1].content,
+          this.response
+        );
+      },
     });
 
-    this.userMessage = '';
+    this.userMessage = "";
   }
 
   sanitizeMessage(content: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(
-      marked.parse(content)
-    );
+    return this.sanitizer.bypassSecurityTrustHtml(marked.parse(content));
   }
 
   ngAfterViewChecked() {
@@ -77,10 +84,12 @@ export class LlmComponent implements AfterViewChecked {
 
   private scrollToBottom(): void {
     try {
-      const container = this.conversationContainer.nativeElement;
-      container.scrollTop = container.scrollHeight;
+      setTimeout(() => {
+        const container = this.conversationContainer.nativeElement;
+        container.scrollTop = container.scrollHeight;
+      }, 1000);
     } catch (err) {
-      console.error('Erreur de défilement:', err);
+      console.error("Erreur de défilement:", err);
     }
   }
 }

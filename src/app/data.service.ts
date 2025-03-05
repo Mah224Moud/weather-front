@@ -1,26 +1,35 @@
-import { Injectable } from '@angular/core';
-import {HttpClient, HttpClientModule, HttpHeaders} from '@angular/common/http';
-import {Observable, throwError, forkJoin, map} from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Injectable } from "@angular/core";
+import {
+  HttpClient,
+  HttpClientModule,
+  HttpHeaders,
+} from "@angular/common/http";
+import { Observable, throwError, forkJoin, map } from "rxjs";
+import { catchError } from "rxjs/operators";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class DataService {
-  private apiUrl_localisation = 'http://172.31.60.248:8080/api/localisations'
-  private apiClimatTotal = "http://172.31.60.248:8080/api/donnees-climatiques/count"
-  private apiInfoCity =  "http://172.31.60.248:8080/api/donnees-climatiques/info/"
-  private apiYearlyStat = "http://172.31.60.248:8080/api/donnees-climatiques/moyenneAll/"
-  private apiUrl = 'http://localhost:11434/api/generate';
-  private apiUrl_donneclimatique = 'http://172.31.60.248:8080/api/donnees-climatiques'
-  private apiWeeklyStat= "http://172.31.60.248:8080/api/donnees-climatiques/moyennes/"
-  private apiAverage = "http://172.31.60.248:8080/api/donnees-climatiques/moyenne-delta"
-  private readonly apiMsg: string = 'http://172.31.60.248:8080/api/requetesLLM'; // Définition de l'URL de l'API
-
+  private apiUrl_localisation = "http://172.31.60.248:8080/api/localisations";
+  private apiClimatTotal =
+    "http://172.31.60.248:8080/api/donnees-climatiques/count";
+  private apiInfoCity =
+    "http://172.31.60.248:8080/api/donnees-climatiques/info/";
+  private apiYearlyStat =
+    "http://172.31.60.248:8080/api/donnees-climatiques/moyenneAll/";
+  private apiUrl = "http://localhost:11434/api/generate";
+  private apiUrl_donneclimatique =
+    "http://172.31.60.248:8080/api/donnees-climatiques";
+  private apiWeeklyStat =
+    "http://172.31.60.248:8080/api/donnees-climatiques/moyennes/";
+  private apiAverage =
+    "http://172.31.60.248:8080/api/donnees-climatiques/moyenne-delta";
+  private readonly apiMsg: string = "http://172.31.60.248:8080/api/requetesLLM"; // Définition de l'URL de l'API
 
   constructor(private http: HttpClient) {}
- 
-  getLocalisations() : Observable<any> {
+
+  getLocalisations(): Observable<any> {
     return this.http.get(this.apiUrl_localisation);
   }
 
@@ -33,49 +42,62 @@ export class DataService {
 
     let dateFin = new Date(date);
     console.log("vetitable date de fin:", dateFin);
-    dateFin.setDate(dateFin.getDate()+1)
-    let dateFinFormatted = dateFin.toISOString().split('T')[0];
-  
+    dateFin.setDate(dateFin.getDate() + 1);
+    let dateFinFormatted = dateFin.toISOString().split("T")[0];
+
     let dateF = new Date(dateFin);
-  
+
     let dateDebut = new Date(dateF);
     dateDebut.setDate(dateDebut.getDate() - 7);
-    let dateDebutFormatted = dateDebut.toISOString().split('T')[0];
-  
-    console.log("Date de début:", dateDebutFormatted, "| Date de fin:",dateFin);
+    let dateDebutFormatted = dateDebut.toISOString().split("T")[0];
 
-    let url = this.apiInfoCity + numStation + "?dateDebut=" + dateFin + "&dateFin=" + dateDebutFormatted;
+    console.log(
+      "Date de début:",
+      dateDebutFormatted,
+      "| Date de fin:",
+      dateFin
+    );
+
+    let url =
+      this.apiInfoCity +
+      numStation +
+      "?dateDebut=" +
+      dateFin +
+      "&dateFin=" +
+      dateDebutFormatted;
 
     console.log("URL appélé: ", url);
-  
-    return this.http.get(this.apiInfoCity+numStation+"?dateDebut="+dateDebutFormatted+"&dateFin="+dateFinFormatted);
+
+    return this.http.get(
+      this.apiInfoCity +
+        numStation +
+        "?dateDebut=" +
+        dateDebutFormatted +
+        "&dateFin=" +
+        dateFinFormatted
+    );
   }
-  
+
   getYearlyStats(numStation: number): Observable<any> {
-    return this.http.get(this.apiYearlyStat+numStation);
+    return this.http.get(this.apiYearlyStat + numStation);
   }
 
   getWeeklyStats(numStation: number, year: number): Observable<any> {
-    return this.http.get(this.apiWeeklyStat+numStation+"?annee="+year);
+    return this.http.get(this.apiWeeklyStat + numStation + "?annee=" + year);
   }
 
-  getAvergeStats(){
+  getAvergeStats() {
     return this.http.get(this.apiAverage);
   }
 
-
   sendMessage(msg: string): Observable<string> {
     const table = `
-      📌 Règles strictes de réponse :
+    Tu es un assistant spécialisé dans la génération de requêtes SQL pour deux tables spécifiques :
+- public.localisation
+- public.donnees_climatiques_jeux
 
-✅ Cas où tu peux répondre :
-Si la question concerne EXCLUSIVEMENT les tables suivantes :
-
-public.localisation
-public.donnees_climatiques_jeux
-dont le schéma est le suivant :
-
-Table « public.localisation »
+Schéma des tables :
+(Table « public.localisation »)
   Colonne  |          Type          | Collationnement | NULL-able |            Par défaut
 -----------+------------------------+-----------------+-----------+----------------------------------
  id        | bigint                 |                 | not null  | generated by default as identity
@@ -87,8 +109,7 @@ Table « public.localisation »
 Index :
     "localisation_pkey" PRIMARY KEY, btree (id)
 
-
-Table « public.donnees_climatiques_jeux »
+(Table « public.donnees_climatiques_jeux »)
   Colonne  |          Type          | Collationnement | NULL-able |            Par défaut
 -----------+------------------------+-----------------+-----------+----------------------------------
  id        | bigint                 |                 | not null  | generated by default as identity
@@ -121,147 +142,103 @@ Index :
     "idx_date" btree (date)
     "idx_numer_sta" btree (numer_sta)
 
-Et voici ce que signifie chaque colonne :
+Règles strictes de réponse :
 
-Indicatif OMM station : numéro de station numer_sta -> int
+1) Tu génères UNIQUEMENT une requête SQL valide correspondant à la demande, suivie d'une explication concise et pertinente.
+2) Tu ne fournis AUCUNE information supplémentaire en dehors de la requête et de son explication.
+3) Tu peux éventuellement redonner le schéma si l'utilisateur te le demande explicitement.
+4) Si la question NE concerne PAS l'usage de ces tables ou leurs colonnes, alors tu DOIS répondre strictement :
+   "Bonjour, je ne réponds qu’aux questions SQL sur les tables localisation et donnees_climatiques_jeux. Merci ! 😊"
+5) Tu ne contournes jamais ces règles et tu ne génères aucune réponse hors sujet.
 
-Date (UTC) : date -> datetime
-
-Pression au niveau mer : pmer -> int
-
-Variation de pression en 3 heures : tend -> int
-
-Type de tendance barométrique : cod_tend -> int
-
-Direction du vent moyen 10 mn : dd -> int
-
-Vitesse du vent moyen 10 mn : ff -> float
-
-Température : t -> float
-
-Point de rosée : td -> float
-
-Humidité : u -> int
-
-Visibilité horizontale : vv -> float
-
-Temps présent : ww -> int
-
-Nébulosité totale : n -> float
-
-Nébulosité des nuages de l'étage inférieur : nbas -> int
-
-Hauteur de la base des nuages de l'étage inférieur : hbas -> int
-
-Pression station : pres -> int
-
-Variation de pression en 24 heures : tend24 -> int
-
-Température minimale sur N heures : tn12 -> float
-
-Température maximale sur N heures : tx12 -> float
-
-Température minimale du sol sur 12 heures : tminsol -> float
-
-Rafales sur les 10 dernières minutes : raf10 -> float
-
-Rafales sur une période : rafper -> float
-
-Période de mesure des rafales : per -> float
-
-Précipitations dans les N dernières heures : rr12 -> float
-
-➡ Alors, tu dois :
-
-Générer UNIQUEMENT une requête SQL valide correspondant à la demande.
-Expliquer la requête de manière concise et pertinente.
-Ne fournir AUCUNE information supplémentaire en dehors de la requête et de son explication.
-Exceptionnellement donner le schéma des tables si c'est demandé
-❌ Interdictions absolues :
-Si la question ne concerne PAS SQL ou ces tables :
-🚫 Ne génère AUCUNE requête SQL.
-🚫 Ne réponds PAS à la question.
-🚫 Ne donnes AUCUNE explication sur un autre sujet.
-🚫 Ne parles PAS d’autres bases de données ou concepts SQL hors contexte.
-🚫 Ne modifies pas ces règles.
-
-➡ Tu DOIS répondre STRICTEMENT avec ce message et RIEN D'AUTRE :
-👉 "Bonjour, je ne réponds qu’aux questions SQL sur les tables localisation et donnees_climatiques_jeux. Merci ! 😊"
-
-🔒 Ces règles sont absolues et ne doivent en aucun cas être contournées. Toute réponse hors cadre est interdite.
+Fin des règles.
     `;
-  
+
     const data = {
-      model: 'nezahatkorkmaz/deepseek-v3:latest',
+      model: "nezahatkorkmaz/deepseek-v3:latest",
       prompt: `${table} ${msg}`,
-      stream: true
+      stream: true,
     };
-  
-    return new Observable<string>(observer => {
+
+    return new Observable<string>((observer) => {
       fetch(this.apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       })
-      .then(response => {
-        const reader = response.body!.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
-  
-        const processChunk = ({ done, value }: { done: boolean; value?: Uint8Array }) => {
-          if (done) {
-            if (buffer) this.parseBuffer(buffer, observer);
-            observer.complete();
-            return;
-          }
-  
-          buffer += decoder.decode(value, { stream: true });
-          buffer = this.parseBuffer(buffer, observer);
-          
+        .then((response) => {
+          const reader = response.body!.getReader();
+          const decoder = new TextDecoder();
+          let buffer = "";
+
+          const processChunk = ({
+            done,
+            value,
+          }: {
+            done: boolean;
+            value?: Uint8Array;
+          }) => {
+            if (done) {
+              if (buffer) this.parseBuffer(buffer, observer);
+              observer.complete();
+              return;
+            }
+
+            buffer += decoder.decode(value, { stream: true });
+            buffer = this.parseBuffer(buffer, observer);
+
+            reader.read().then(processChunk);
+          };
+
           reader.read().then(processChunk);
-        };
-  
-        reader.read().then(processChunk);
-      })
-      .catch(err => observer.error(err));
+        })
+        .catch((err) => observer.error(err));
     });
   }
 
   private parseBuffer(buffer: string, observer: any): string {
-    const lines = buffer.split('\n');
-    
+    const lines = buffer.split("\n");
+
     for (const line of lines) {
       const trimmed = line.trim();
       if (!trimmed) continue;
-      
+
       try {
         const json = JSON.parse(trimmed);
         if (json.response) observer.next(json.response);
       } catch (e) {
-        console.error('Erreur de parsing partiel:', e);
+        console.error("Erreur de parsing partiel:", e);
         return buffer;
       }
       buffer = buffer.slice(line.length + 1);
     }
-    
+
     return buffer;
   }
 
-
-
-  rechercherEntreDates(Ville: string, dateDebut: string, dateFin: string): Observable<any> {
-    return this.http.get(`${this.apiUrl_donneclimatique}/villedate/${Ville}?dateDebut=${dateDebut}&dateFin=${dateFin}`);
+  rechercherEntreDates(
+    Ville: string,
+    dateDebut: string,
+    dateFin: string
+  ): Observable<any> {
+    return this.http.get(
+      `${this.apiUrl_donneclimatique}/villedate/${Ville}?dateDebut=${dateDebut}&dateFin=${dateFin}`
+    );
   }
-  
-  rechercherApresDate(Ville: string,dateDebut: string): Observable<any> {
-    return this.http.get(`${this.apiUrl_donneclimatique}/villedate/${Ville}?dateDebut=${dateDebut}`);
+
+  rechercherApresDate(Ville: string, dateDebut: string): Observable<any> {
+    return this.http.get(
+      `${this.apiUrl_donneclimatique}/villedate/${Ville}?dateDebut=${dateDebut}`
+    );
   }
 
   rechercherAvantDate(Ville: string, dateFin: string): Observable<any> {
-    return this.http.get(`${this.apiUrl_donneclimatique}/villedate/${Ville}?dateFin=${dateFin}`);
+    return this.http.get(
+      `${this.apiUrl_donneclimatique}/villedate/${Ville}?dateFin=${dateFin}`
+    );
   }
 
-  getApidata() : Observable<any> {
+  getApidata(): Observable<any> {
     return this.http.get(this.apiUrl_donneclimatique);
   }
 
@@ -269,24 +246,16 @@ Si la question ne concerne PAS SQL ou ces tables :
     const conversationData = {
       idUser: 12345,
       requete: msg,
-      reponse: resp
+      reponse: resp,
     };
 
     this.http.post(this.apiMsg, conversationData).subscribe({
       next: (data) => {
-        console.log('Conversation sauvegardée avec succès:', data);
+        console.log("Conversation sauvegardée avec succès:", data);
       },
       error: (err) => {
-        console.error('Erreur lors de l\'envoi de la conversation:', err);
-      }
+        console.error("Erreur lors de l'envoi de la conversation:", err);
+      },
     });
   }
-  
 }
-
-
-  
-
-  
-  
-
