@@ -76,15 +76,4 @@
 </div>
 
 
-<section *ngIf="adminMode">
-  <h2>Mode Admin</h2>
-  <button (click)="showCacheData()">Afficher les données du cache</button>
-  <button (click)="clearCache()">Nettoyer le cache</button>
-  <button (click)="logout()">Se déconnecter</button>
-</section>
 
-
-<section *ngIf="isLoggedIn && !adminMode">
-  <h2>Bienvenue {{ loggedInUser?.firstName }} {{ loggedInUser?.lastName }}</h2>
-  <button (click)="logout()">Se déconnecter</button>
-</section>
