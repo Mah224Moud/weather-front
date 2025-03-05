@@ -25,7 +25,8 @@ export class DataService {
     "http://172.31.60.248:8080/api/donnees-climatiques/moyennes/";
   private apiAverage =
     "http://172.31.60.248:8080/api/donnees-climatiques/moyenne-delta";
-  private readonly apiMsg: string = "http://172.31.60.248:8080/api/requetesLLM"; // Définition de l'URL de l'API
+  private readonly apiMsg = "http://172.31.60.248:8080/api/requetesLLM";
+  private userMsg = "http://172.31.60.248:8080/api/requetesLLM/utilisateur/";
 
   constructor(private http: HttpClient) {}
 
@@ -242,9 +243,9 @@ Fin des règles.
     return this.http.get(this.apiUrl_donneclimatique);
   }
 
-  saveConversation(msg: string, resp: string) {
+  saveConversation(msg: string, resp: string, userID: number) {
     const conversationData = {
-      idUser: 12345,
+      idUser: userID,
       requete: msg,
       reponse: resp,
     };
@@ -257,5 +258,9 @@ Fin des règles.
         console.error("Erreur lors de l'envoi de la conversation:", err);
       },
     });
+  }
+
+  getUserMessages(id: number): Observable<any> {
+    return this.http.get(this.userMsg + id);
   }
 }

@@ -10,6 +10,7 @@ import { DataService } from "../../data.service";
 import marked from "marked";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { HttpClient } from "@angular/common/http";
+import { Historique } from "../../models/historique";
 
 @Component({
   selector: "app-llm",
@@ -22,7 +23,9 @@ export class LlmComponent implements AfterViewChecked {
   response: string = "";
   isWaiting = false;
   messages: { content: string; type: string }[] = [];
+  historiques: Historique[] = [];
   sanitizedResponse: SafeHtml = "";
+  userID: number = 12345;
 
   @ViewChild("conversationContainer")
   private conversationContainer!: ElementRef;
@@ -37,7 +40,25 @@ export class LlmComponent implements AfterViewChecked {
     return this.sanitizer.bypassSecurityTrustHtml(marked.parse(this.response));
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadMsg(this.userID);
+  }
+
+  private loadMsg(id: number): void {
+    this.service.getUserMessages(id).subscribe({
+      next: (response) => {
+        this.historiques = response;
+        console.log(this.historiques);
+        this.historiques.forEach((item) => {
+          this.messages.push({ content: item.requete, type: "user" });
+          this.messages.push({ content: item.reponse, type: "bot" });
+        });
+      },
+      error: (err) => {
+        console.error("Erreur lors de la récupération des msg:", err);
+      },
+    });
+  }
 
   sendMessage() {
     if (!this.userMessage.trim()) return;
@@ -66,7 +87,8 @@ export class LlmComponent implements AfterViewChecked {
         );
         this.service.saveConversation(
           this.messages[botMessageIndex - 1].content,
-          this.response
+          this.response,
+          this.userID
         );
       },
     });
