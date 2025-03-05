@@ -3,6 +3,7 @@ import {
   ViewChild,
   ElementRef,
   AfterViewChecked,
+  HostListener,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -26,6 +27,7 @@ export class LlmComponent implements AfterViewChecked {
   historiques: Historique[] = [];
   sanitizedResponse: SafeHtml = "";
   userID: number = 12345;
+  showScrollButton: boolean = false;
 
   @ViewChild("conversationContainer")
   private conversationContainer!: ElementRef;
@@ -53,6 +55,7 @@ export class LlmComponent implements AfterViewChecked {
           this.messages.push({ content: item.requete, type: "user" });
           this.messages.push({ content: item.reponse, type: "bot" });
         });
+        this.scrollToBottom();
       },
       error: (err) => {
         console.error("Erreur lors de la récupération des msg:", err);
@@ -73,6 +76,7 @@ export class LlmComponent implements AfterViewChecked {
     this.service.sendMessage(this.userMessage).subscribe({
       next: (chunk) => {
         this.response += chunk;
+        this.scrollToBottom();
         this.messages[botMessageIndex].content = this.response;
       },
       error: (err) => {
@@ -100,18 +104,22 @@ export class LlmComponent implements AfterViewChecked {
     return this.sanitizer.bypassSecurityTrustHtml(marked.parse(content));
   }
 
-  ngAfterViewChecked() {
-    this.scrollToBottom();
-  }
+  ngAfterViewChecked() {}
 
   private scrollToBottom(): void {
-    try {
-      setTimeout(() => {
-        const container = this.conversationContainer.nativeElement;
-        container.scrollTop = container.scrollHeight;
-      }, 1000);
-    } catch (err) {
-      console.error("Erreur de défilement:", err);
-    }
+    setTimeout(() => {
+      if (!this.conversationContainer) return;
+      const container = this.conversationContainer.nativeElement;
+      container.scrollTop = container.scrollHeight + 100;
+      this.showScrollButton = true;
+    }, 0);
+  }
+
+  scrollToTop() {
+    const container = this.conversationContainer.nativeElement;
+    container.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 }

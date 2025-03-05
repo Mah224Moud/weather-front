@@ -11,11 +11,16 @@
   
 </div> -->
 
-<div class="chat-container my-5">
+<div class="chat-container pt-5 mb-5">
   <!-- Conteneur des messages avec défilement automatique -->
   <div class="conversation-container" #conversationContainer>
     <div *ngFor="let message of messages; let i = index">
-      <div [ngClass]="{'user-message': message.type === 'user', 'bot-message': message.type === 'bot'}">
+      <div
+        [ngClass]="{
+          'user-message': message.type === 'user',
+          'bot-message': message.type === 'bot'
+        }"
+      >
         <div [innerHTML]="sanitizeMessage(message.content)"></div>
       </div>
     </div>
@@ -25,11 +30,33 @@
 
   <!-- Zone d'entrée de message et bouton envoyer -->
   <div class="input-container bg-dark">
-    <textarea [(ngModel)]="userMessage" placeholder="Posez votre question..." (keyup.enter)="sendMessage()" [disabled]="isWaiting"> </textarea>
-    <button (click)="sendMessage()" class="btn btn-outline-light" [disabled]="isWaiting">Envoyer</button>
+    <textarea
+      [(ngModel)]="userMessage"
+      placeholder="Posez votre question..."
+      (keyup.enter)="sendMessage()"
+      [disabled]="isWaiting"
+    >
+    </textarea>
+    <button
+      (click)="sendMessage()"
+      class="btn btn-outline-light"
+      [disabled]="isWaiting"
+    >
+      Envoyer
+    </button>
   </div>
+  <button class="scrollToTop" (click)="scrollToTop()" *ngIf="showScrollButton">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="30"
+      height="30"
+      fill="#1db954"
+      class="bi bi-arrow-up-square-fill"
+      viewBox="0 0 16 16"
+    >
+      <path
+        d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0"
+      />
+    </svg>
+  </button>
 </div>
-
-
-
-

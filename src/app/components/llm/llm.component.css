@@ -73,3 +73,14 @@ button {
   max-width: 80%;
   word-wrap: break-word;
 }
+
+
+
+.scrollToTop{
+  position: fixed;
+  top: 60%;
+  right: 10px;
+  background-color: transparent;
+  border: none;
+  z-index: 1000;
+}
