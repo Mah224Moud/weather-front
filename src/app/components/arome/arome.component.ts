@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as L from 'leaflet';
-import { WmsService } from '../../wms.service';
+import { WmsService } from '../../services/wms.service';
 import { Arome } from '../../models/arome';
 import { City } from '../../models/city';
 import { DataService } from '../../data.service';
