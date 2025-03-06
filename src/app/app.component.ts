@@ -22,12 +22,16 @@ import { UserInfo } from "./models/userInfo";
 })
 export class AppComponent {
   isLoggedIn = false;
+  userInfo: UserInfo = { email: "", nom: "", prenom: "" };
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
     this.authService.user$.subscribe((user: UserInfo | null) => {
       this.isLoggedIn = !!user;
+      if (user) {
+        this.userInfo = user;
+      }
       console.log("Status de connexion mis à jour :", this.isLoggedIn);
     });
   }
