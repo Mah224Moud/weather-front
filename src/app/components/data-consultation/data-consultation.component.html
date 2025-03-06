@@ -5,7 +5,14 @@
       >{{ donneesClimatiques.length }}/{{ total | number : "1.0-0" }}</span
     >
   </h3>
-
+  <p class="text-center my-5 ">
+    Cette page vous permet de consulter les données climatiques disponibles en fonction de la ville et des dates que vous sélectionnez. 
+    Vous devez d'abord entrer le nom de la ville et spécifier une plage de dates (date de début et date de fin) pour affiner votre recherche puis cliquez sur "Recherche" pour obtenir les résultats. 
+    
+    Vous pouvez télécharger les données et choisir le format (JSON ou CSV).
+    Vous avez aussi la possibilité de sélectionner les colonnes que vous souhaitez afficher dans le tableau des résultats.
+  </p>
+  
   <div class="d-flex">
     <input
       [(ngModel)]="Ville"

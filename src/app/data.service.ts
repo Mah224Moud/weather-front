@@ -217,31 +217,11 @@ Fin des règles.
     return buffer;
   }
 
-  rechercherEntreDates(
-    Ville: string,
-    dateDebut: string,
-    dateFin: string
-  ): Observable<any> {
-    return this.http.get(
-      `${this.apiUrl_donneclimatique}/villedate/${Ville}?dateDebut=${dateDebut}&dateFin=${dateFin}`
-    );
+  rechercherEntreDates(Ville: string,dateDebut: string,dateFin: string): Observable<any> {
+    console.log("requete envoyé : "+ `${this.apiUrl_donneclimatique}/villedate/${Ville}?dateDebut=${dateDebut}&dateFin=${dateFin}`)
+    return this.http.get(`${this.apiUrl_donneclimatique}/villedate/${Ville}?dateDebut=${dateDebut}&dateFin=${dateFin}`);
   }
 
-  rechercherApresDate(Ville: string, dateDebut: string): Observable<any> {
-    return this.http.get(
-      `${this.apiUrl_donneclimatique}/villedate/${Ville}?dateDebut=${dateDebut}`
-    );
-  }
-
-  rechercherAvantDate(Ville: string, dateFin: string): Observable<any> {
-    return this.http.get(
-      `${this.apiUrl_donneclimatique}/villedate/${Ville}?dateFin=${dateFin}`
-    );
-  }
-
-  getApidata(): Observable<any> {
-    return this.http.get(this.apiUrl_donneclimatique);
-  }
 
   saveConversation(msg: string, resp: string, userID: number) {
     const conversationData = {

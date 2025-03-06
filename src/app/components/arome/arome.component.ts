@@ -51,8 +51,8 @@ export class AromeComponent implements OnInit {
     { cle: "Altitude géométrique", valeur: "GEOMETRIC_HEIGHT__GROUND_OR_WATER_SURFACE" }
   ];
   selectedLayer: string = this.layers[0].valeur;
-  overlays: L.ImageOverlay[] = [];  // Tableau pour stocker les overlays
-  isLoading: boolean = false;  // Indicateur de chargement
+  overlays: L.ImageOverlay[] = []; 
+  isLoading: boolean = false; 
 
   constructor(private wmsService: WmsService, private dataService: DataService) {}
 
@@ -100,13 +100,11 @@ export class AromeComponent implements OnInit {
   }
 
   generateThreeHourIntervals(): void {
-    const today = new Date();  // Récupère la date actuelle
-
-    // Réinitialise l'heure pour obtenir le début du jour (00:00:00)
+    const today = new Date();  
     const baseDate = new Date(today);
-    baseDate.setHours(1, 0, 0, 0); // Remet l'heure à 00:00:00.000
+    baseDate.setHours(1, 0, 0, 0); 
 
-    // Crée les 8 dates avec des intervalles de 3 heures
+
     const date1: Date = new Date(baseDate);
     const date2: Date = new Date(baseDate);
     const date3: Date = new Date(baseDate);

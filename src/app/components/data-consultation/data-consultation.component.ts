@@ -22,12 +22,12 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
   total: number = 0;
   dateDebut: string = "";
   dateFin: string = "";
-  Ville: string = "";
+  Ville: string = "DIJON-LONGVIC";
   donneesClimatiques: any[] = [];
   localisations: any[] = [];
   filteredCities: any[] = [];
   selectedCity: any = null;
-  selectdefault: any = null;
+  selectdefault: any = "DIJON-LONGVIC";
   isfiltered: boolean = false;
   private retryAttempt = 0;
   private maxRetry = 5;
@@ -108,9 +108,12 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
     this.availableColumns.forEach(
       (col) => (this.selectedColumns[col.key] = true)
     );
-    this.getDataLoc();
-    this.getData();
-    this.loadTotal();
+
+    this.loadTotal();               // Recup les nombres totale de tuples
+    this.getDataLoc();              // Recup toutes les stations (table localisation)
+    this.selectDefaultCity();       // Selectionne Dijon par defaut apres avoir verifié si la ville elle existe dans la BD
+    //this.getData();
+
 
     this.authService.user$.subscribe((user: UserInfo | null) => {
       this.isLoggedIn = !!user;
@@ -124,6 +127,7 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
     );
     tooltipTriggerList.forEach((el) => new bootstrap.Tooltip(el));
   }
+
   private loadTotal(): void {
     this.dataService.getTotal().subscribe({
       next: (response) => {
@@ -135,51 +139,34 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
       },
     });
   }
-  rechercher() {
-    if (!this.Ville || (!this.dateDebut && !this.dateFin)) {
-      return;
-    }
 
-    this.meteoRequest().subscribe({
-      next: (data) => {
-        this.donneesClimatiques = data;
-        console.log("Données récupérées :", this.donneesClimatiques);
-        this.retryAttempt = 0;
-      },
-      error: (error) => {
-        console.error("Erreur lors de la récupération des données:", error);
-      },
-    });
-  }
+  // getData() {
+  //   this.meteoRequestAll().subscribe({
+  //     next: (data) => {
+  //       this.mesdonnees = data;
+  //       console.log(" Données récupérées :", this.mesdonnees);
+  //       this.retryAttempt = 0;
+  //     },
+  //     error: (error) => {
+  //       console.error(" Erreur lors de la récupération des données:", error);
+  //     },
+  //   });
+  // }
 
-  getData() {
-    this.meteoRequestAll().subscribe({
-      next: (data) => {
-        this.mesdonnees = data;
-        console.log(" Données récupérées :", this.mesdonnees);
-        this.retryAttempt = 0;
-      },
-      error: (error) => {
-        console.error(" Erreur lors de la récupération des données:", error);
-      },
-    });
-  }
-
-  meteoRequestAll(): Observable<any> {
-    return this.dataService.getApidata().pipe(
-      catchError((error) => {
-        console.error(" Erreur lors de la récupération des données :", error);
-        return throwError(() => error);
-      })
-    );
-  }
+  // meteoRequestAll(): Observable<any> {
+  //   return this.dataService.getApidata().pipe(
+  //     catchError((error) => {
+  //       console.error(" Erreur lors de la récupération des données :", error);
+  //       return throwError(() => error);
+  //     })
+  //   );
+  // }
 
   getDataLoc() {
-    this.localisationRequest().subscribe({
+    this.dataService.getLocalisations().subscribe({
       next: (data) => {
         this.localisations = data;
         console.log(" Localisations chargées :", this.localisations);
-        this.selectDefaultCity();
         this.retryAttempt = 0;
       },
       error: (error) => {
@@ -196,41 +183,35 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
       (city) => city.ville === "DIJON-LONGVIC"
     );
 
-    if (this.selectdefault) {
+    if (this.selectdefault !== undefined && this.selectdefault !== null) {
       this.Ville = this.selectdefault.ville;
-      this.rechercher();
-    } else {
+    }else {
       console.log(" Ville par défaut non trouvée !");
     }
   }
 
-  isSelected(column: string): boolean {
-    return this.selectedColumns[column];
-  }
-
-  meteoRequest(): Observable<any> {
-    let apiCall: Observable<any>;
-
-    if (this.Ville && this.dateDebut && this.dateFin) {
-      apiCall = this.dataService.rechercherEntreDates(
-        this.Ville,
-        this.dateDebut,
-        this.dateFin
-      );
-    } else if (this.Ville && this.dateDebut) {
-      apiCall = this.dataService.rechercherApresDate(
-        this.Ville,
-        this.dateDebut
-      );
-    } else {
-      apiCall = this.dataService.rechercherAvantDate(this.Ville, this.dateFin);
+  rechercher() {
+    if(!this.Ville || !this.dateDebut || !this.dateFin) {
+      return;
     }
 
-    return apiCall;
+    this.dataService.rechercherEntreDates(this.Ville, this.dateDebut, this.dateFin).subscribe({
+      next: (data) => {
+        this.donneesClimatiques = data;
+        console.log("Données récupérées :", this.donneesClimatiques);
+        console.log("Ville :", this.Ville);
+        console.log("dateDebut :", this.dateDebut);
+        console.log("dateFin  :", this.dateFin);
+        this.retryAttempt = 0;
+      },
+      error: (error) => {
+        console.error("Erreur lors de la récupération des données:", error);
+      },
+    });
   }
 
-  localisationRequest(): Observable<any> {
-    return this.dataService.getLocalisations();
+  isSelected(column: string): boolean {
+    return this.selectedColumns[column];
   }
 
   onSearch(): void {
