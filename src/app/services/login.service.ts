@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpParams, HttpHeaders } from "@angular/common/http";
 import { Observable, tap, catchError, of } from "rxjs";
 @Injectable({
   providedIn: "root",
@@ -7,6 +7,7 @@ import { Observable, tap, catchError, of } from "rxjs";
 export class LoginService {
   private url = "http://172.31.60.248:8080/api/utilisateur/";
   private loginUrl = "http://172.31.60.248:8080/api/utilisateurs/login";
+  private registrationUrl = "http://172.31.60.248:8080/api/utilisateurs";
   constructor(private http: HttpClient) {}
 
   getUserInfo(email: string): Observable<any> {
@@ -27,5 +28,18 @@ export class LoginService {
           return of({ success: false });
         })
       );
+  }
+
+  registration(
+    nom: string,
+    prenom: string,
+    email: string,
+    motDePasse: string
+  ): Observable<any> {
+    const utilisateur = { nom, prenom, email, motDePasse };
+
+    return this.http.post(this.registrationUrl, utilisateur, {
+      headers: new HttpHeaders({ "Content-Type": "application/json" }),
+    });
   }
 }

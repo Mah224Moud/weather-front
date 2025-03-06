@@ -25,13 +25,8 @@ declare var bootstrap: any;
   styleUrls: ["./login.component.css"],
 })
 export class LoginComponent {
-  private apiUrl = "http://172.31.60.248:8080/api/utilisateurs";
   loginForm: FormGroup;
   registerForm: FormGroup;
-  isLoggedIn: boolean = false;
-  adminMode: boolean = false;
-  loggedInUser: any = null;
-  utilisateur: any = null;
   errorMessage: string = "";
 
   showLoginForm: boolean = true;
@@ -40,7 +35,6 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient,
     private loginService: LoginService
   ) {
     this.loginForm = this.fb.group({
@@ -76,82 +70,19 @@ export class LoginComponent {
       },
     });
   }
-  onLogin() {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      this.login(email, password);
-    } else {
-      this.showToast("Le formulaire de connexion est invalide.", "warning");
-    }
-  }
 
-  /** ✅ Correction de l'URL pour récupérer un utilisateur par email */
-  getUtilisateurByEmail(email: string): any {
-    this.http.get<any>(`${this.apiUrl}/${email}`).subscribe({
-      next: (data) => {
-        this.utilisateur = data;
-        console.log("✅ Utilisateur récupéré :", this.utilisateur);
-      },
-      error: (error) => {
-        if (error.status === 404) {
-          this.errorMessage = "❌ Utilisateur non trouvé";
-        } else {
-          this.errorMessage =
-            "❌ Une erreur est survenue lors de la récupération de l'utilisateur";
-        }
-        console.error("❌ Erreur :", error);
-      },
-    });
-  }
-
-  userInfo(email: string) {}
-
-  /** Reste du code inchangé */
-  CreeUser(
-    nom: string,
-    prenom: string,
+  registration(
+    lastName: string,
+    firstName: string,
     email: string,
-    motDePasse: string
-  ): Observable<any> {
-    const utilisateur = { nom, prenom, email, motDePasse };
-    console.log("📨 Envoi des données utilisateur :", utilisateur);
-
-    return this.http.post(this.apiUrl, utilisateur, {
-      headers: new HttpHeaders({ "Content-Type": "application/json" }),
-    });
-  }
-
-  onRegister() {
-    if (this.registerForm.valid) {
-      const { firstName, lastName, email, password } = this.registerForm.value;
-
-      /*const cache: {
-        firstName: string;
-        lastName: string;
-        email: string;
-        password: string;
-      }[] = JSON.parse(localStorage.getItem("userCache") || "[]");
-
-      if (cache.some((user) => user.email === email)) {
-        this.showToast("Cet email est déjà inscrit.", "danger");
-        return;
-      }
-
-      cache.push({ firstName, lastName, email, password });
-      localStorage.setItem("userCache", JSON.stringify(cache));*/
-
-      this.showToast(
-        `Inscription réussie pour ${firstName} ${lastName} !`,
-        "success"
-      );
-
-      this.CreeUser(lastName, firstName, email, password).subscribe({
+    password: string
+  ): void {
+    this.loginService
+      .registration(lastName, firstName, email, password)
+      .subscribe({
         next: (response) => {
           console.log("✅ Utilisateur ajouté avec succès :", response);
-          this.showToast(
-            "Utilisateur enregistré en base de données avec succès !",
-            "success"
-          );
+          this.showToast("Votre compte à été crée avec succès !!!");
 
           this.registerForm.reset();
           this.showLoginForm = true;
@@ -165,20 +96,31 @@ export class LoginComponent {
           );
         },
       });
+  }
+
+  onLogin() {
+    if (this.loginForm.valid) {
+      const { email, password } = this.loginForm.value;
+      this.login(email, password);
     } else {
-      this.showToast("Veuillez remplir correctement le formulaire.", "warning");
+      this.showToast("Le formulaire de connexion est invalide.", "warning");
     }
   }
 
-  logout() {
-    this.isLoggedIn = false;
-    this.loggedInUser = null;
-    this.adminMode = false;
+  userInfo(email: string) {}
 
-    this.showToast("Déconnexion réussie.", "info");
+  onRegister() {
+    if (this.registerForm.valid) {
+      const { firstName, lastName, email, password } = this.registerForm.value;
+      this.showToast(
+        `Inscription réussie pour ${firstName} ${lastName} !`,
+        "success"
+      );
 
-    this.showLoginForm = true;
-    this.showRegisterForm = false;
+      this.registration(lastName, firstName, email, password);
+    } else {
+      this.showToast("Veuillez remplir correctement le formulaire.", "warning");
+    }
   }
 
   showToast(message: string, type: string = "success") {
@@ -204,15 +146,6 @@ export class LoginComponent {
       setTimeout(() => {
         toastLiveExample.classList.remove(`bg-${type}`);
       }, 5000);
-    }
-  }
-
-  showCacheData() {
-    const cache = localStorage.getItem("userCache");
-    if (cache) {
-      this.showToast(`Données du cache : ${cache}`, "info");
-    } else {
-      this.showToast("Aucune donnée dans le cache.", "warning");
     }
   }
 
