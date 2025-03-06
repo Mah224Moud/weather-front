@@ -1,0 +1,48 @@
+
+export const COLONNE_DISPO = [
+    { key: "id", label: "ID", description: "Identifiant unique" },
+    {
+      key: "numer_sta",
+      label: "NUMER_STA",
+      description: "Numéro de la station",
+    },
+    { key: "date", label: "Date", description: "Date de la mesure" },
+    { key: "pmer", label: "PMER", description: "Pression au niveau de la mer" },
+    { key: "tend", label: "TEND", description: "Tendance barométrique" },
+    { key: "cod_tend", label: "COD_TEND", description: "Code de tendance" },
+    { key: "dd", label: "DD", description: "Direction du vent" },
+    { key: "ff", label: "FF", description: "Vitesse du vent" },
+    { key: "t", label: "T", description: "Température" },
+    { key: "td", label: "TD", description: "Température du point de rosée" },
+    { key: "u", label: "U", description: "Humidité relative" },
+    { key: "vv", label: "VV", description: "Visibilité horizontale" },
+    { key: "ww", label: "WW", description: "Temps significatif" },
+    { key: "n", label: "N", description: "Nébulosité totale" },
+    { key: "nbas", label: "NBAS", description: "Nébulosité des nuages bas" },
+    {
+      key: "hbas",
+      label: "HBAS",
+      description: "Hauteur de la base des nuages",
+    },
+    { key: "pres", label: "PRES", description: "Pression atmosphérique" },
+    {
+      key: "tend24",
+      label: "TEND24",
+      description: "Évolution de pression en 24h",
+    },
+    { key: "tn12", label: "TN12", description: "Température minimale sur 12h" },
+    { key: "tx12", label: "TX12", description: "Température maximale sur 12h" },
+    {
+      key: "tminsol",
+      label: "TMINSOL",
+      description: "Température minimale du sol",
+    },
+    {
+      key: "raf10",
+      label: "RAF10",
+      description: "Rafale maximale en 10 minutes",
+    },
+    { key: "rafper", label: "RAFPER", description: "Période de rafale" },
+    { key: "per", label: "PER", description: "Période observée" },
+    { key: "rr12", label: "RR12", description: "Précipitations sur 12h" },
+  ];

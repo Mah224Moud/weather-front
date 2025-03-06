@@ -7,6 +7,7 @@ import { DecimalPipe } from "@angular/common";
 import { AuthService } from "../../services/auth.service";
 import { ConsultationService } from "../../services/consultation.service";
 import { UserInfo } from "../../models/userInfo";
+import { COLONNE_DISPO } from "../../models/consultation";
 
 declare var bootstrap: any;
 
@@ -38,53 +39,7 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
 
   isLoggedIn = false;
 
-  availableColumns = [
-    { key: "id", label: "ID", description: "Identifiant unique" },
-    {
-      key: "numer_sta",
-      label: "NUMER_STA",
-      description: "Numéro de la station",
-    },
-    { key: "date", label: "Date", description: "Date de la mesure" },
-    { key: "pmer", label: "PMER", description: "Pression au niveau de la mer" },
-    { key: "tend", label: "TEND", description: "Tendance barométrique" },
-    { key: "cod_tend", label: "COD_TEND", description: "Code de tendance" },
-    { key: "dd", label: "DD", description: "Direction du vent" },
-    { key: "ff", label: "FF", description: "Vitesse du vent" },
-    { key: "t", label: "T", description: "Température" },
-    { key: "td", label: "TD", description: "Température du point de rosée" },
-    { key: "u", label: "U", description: "Humidité relative" },
-    { key: "vv", label: "VV", description: "Visibilité horizontale" },
-    { key: "ww", label: "WW", description: "Temps significatif" },
-    { key: "n", label: "N", description: "Nébulosité totale" },
-    { key: "nbas", label: "NBAS", description: "Nébulosité des nuages bas" },
-    {
-      key: "hbas",
-      label: "HBAS",
-      description: "Hauteur de la base des nuages",
-    },
-    { key: "pres", label: "PRES", description: "Pression atmosphérique" },
-    {
-      key: "tend24",
-      label: "TEND24",
-      description: "Évolution de pression en 24h",
-    },
-    { key: "tn12", label: "TN12", description: "Température minimale sur 12h" },
-    { key: "tx12", label: "TX12", description: "Température maximale sur 12h" },
-    {
-      key: "tminsol",
-      label: "TMINSOL",
-      description: "Température minimale du sol",
-    },
-    {
-      key: "raf10",
-      label: "RAF10",
-      description: "Rafale maximale en 10 minutes",
-    },
-    { key: "rafper", label: "RAFPER", description: "Période de rafale" },
-    { key: "per", label: "PER", description: "Période observée" },
-    { key: "rr12", label: "RR12", description: "Précipitations sur 12h" },
-  ];
+  availableColumns = COLONNE_DISPO;
 
   selectedColumns: { [key: string]: boolean } = {
     id: true,
@@ -109,10 +64,9 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
       (col) => (this.selectedColumns[col.key] = true)
     );
 
-    this.loadTotal();               // Recup les nombres totale de tuples
-    this.getDataLoc();              // Recup toutes les stations (table localisation)
-    this.selectDefaultCity();       // Selectionne Dijon par defaut apres avoir verifié si la ville elle existe dans la BD
-    //this.getData();
+    this.loadTotal();            
+    this.getDataLoc();       
+    this.selectDefaultCity();  
 
 
     this.authService.user$.subscribe((user: UserInfo | null) => {
@@ -139,28 +93,6 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
       },
     });
   }
-
-  // getData() {
-  //   this.meteoRequestAll().subscribe({
-  //     next: (data) => {
-  //       this.mesdonnees = data;
-  //       console.log(" Données récupérées :", this.mesdonnees);
-  //       this.retryAttempt = 0;
-  //     },
-  //     error: (error) => {
-  //       console.error(" Erreur lors de la récupération des données:", error);
-  //     },
-  //   });
-  // }
-
-  // meteoRequestAll(): Observable<any> {
-  //   return this.dataService.getApidata().pipe(
-  //     catchError((error) => {
-  //       console.error(" Erreur lors de la récupération des données :", error);
-  //       return throwError(() => error);
-  //     })
-  //   );
-  // }
 
   getDataLoc() {
     this.dataService.getLocalisations().subscribe({
