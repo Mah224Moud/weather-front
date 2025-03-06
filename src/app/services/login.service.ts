@@ -5,7 +5,7 @@ import { Observable, tap, catchError, of } from "rxjs";
   providedIn: "root",
 })
 export class LoginService {
-  private url = "http://172.31.60.248:8080/api/utilisateur/";
+  private url = "http://172.31.60.248:8080/api/utilisateurs/";
   private loginUrl = "http://172.31.60.248:8080/api/utilisateurs/login";
   private registrationUrl = "http://172.31.60.248:8080/api/utilisateurs";
   constructor(private http: HttpClient) {}

@@ -14,6 +14,7 @@ import { Observable } from "rxjs";
 import { tap, catchError } from "rxjs/operators";
 import { of } from "rxjs";
 import { LoginService } from "../../services/login.service";
+import { UserInfo } from "../../models/userInfo";
 
 declare var bootstrap: any;
 
@@ -28,6 +29,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   registerForm: FormGroup;
   errorMessage: string = "";
+  userInfo: UserInfo = { email: "", nom: "", prenom: "" };
 
   showLoginForm: boolean = true;
   showRegisterForm: boolean = false;
@@ -57,7 +59,7 @@ export class LoginComponent {
       next: (response) => {
         if (response) {
           this.showToast("Connexion réussie !", "success");
-
+          this.getUserInfo(email);
           setTimeout(() => {
             this.router.navigate(["/"]);
           }, 3000);
@@ -107,7 +109,24 @@ export class LoginComponent {
     }
   }
 
-  userInfo(email: string) {}
+  getUserInfo(email: string): void {
+    this.loginService.getUserInfo(email).subscribe({
+      next: (response) => {
+        this.userInfo.email = response.email;
+        this.userInfo.nom = response.nom;
+        this.userInfo.prenom = response.prenom;
+
+        console.log(this.userInfo);
+      },
+      error: (error) => {
+        console.error(
+          "❌ Erreur lors de lors de la recup des infos Utilisateur avec le mail: " +
+            email,
+          error
+        );
+      },
+    });
+  }
 
   onRegister() {
     if (this.registerForm.valid) {
@@ -147,11 +166,6 @@ export class LoginComponent {
         toastLiveExample.classList.remove(`bg-${type}`);
       }, 5000);
     }
-  }
-
-  clearCache() {
-    localStorage.removeItem("userCache");
-    this.showToast("Cache nettoyé avec succès.", "danger");
   }
 
   toggleForms(event: Event) {
