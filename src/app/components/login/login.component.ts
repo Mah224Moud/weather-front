@@ -15,6 +15,7 @@ import { tap, catchError } from "rxjs/operators";
 import { of } from "rxjs";
 import { LoginService } from "../../services/login.service";
 import { UserInfo } from "../../models/userInfo";
+import { AuthService } from "../../services/auth.service";
 
 declare var bootstrap: any;
 
@@ -37,7 +38,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
       email: ["", [Validators.required, Validators.email]],
@@ -60,7 +62,9 @@ export class LoginComponent {
         if (response) {
           this.showToast("Connexion réussie !", "success");
           this.getUserInfo(email);
+
           setTimeout(() => {
+            this.authService.login(this.userInfo);
             this.router.navigate(["/"]);
           }, 3000);
         } else {
