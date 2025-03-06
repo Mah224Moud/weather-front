@@ -60,13 +60,12 @@ export class LoginComponent {
     this.loginService.login(email, password).subscribe({
       next: (response) => {
         if (response) {
-          this.showToast("Connexion réussie !", "success");
           this.getUserInfo(email);
 
           setTimeout(() => {
             this.authService.login(this.userInfo);
             this.router.navigate(["/"]);
-          }, 3000);
+          }, 500);
         } else {
           this.showToast("Email ou mot de passe incorrect.", "warning");
         }
@@ -119,6 +118,11 @@ export class LoginComponent {
         this.userInfo.email = response.email;
         this.userInfo.nom = response.nom;
         this.userInfo.prenom = response.prenom;
+
+        this.showToast(
+          "Bonjour, " + this.userInfo.prenom.toLocaleUpperCase(),
+          "success"
+        );
 
         console.log(this.userInfo);
       },

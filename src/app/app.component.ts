@@ -13,6 +13,8 @@ import { DecimalPipe } from "@angular/common";
 import { AuthService } from "./services/auth.service";
 import { Router } from "@angular/router";
 import { UserInfo } from "./models/userInfo";
+
+declare var bootstrap: any;
 @Component({
   selector: "app-root",
 
@@ -37,8 +39,38 @@ export class AppComponent {
   }
 
   logout() {
+    this.showToast(
+      "A la prochaine " + this.userInfo.prenom.toUpperCase(),
+      "primary"
+    );
     this.authService.logout();
     this.router.navigate(["/"]);
+  }
+
+  showToast(message: string, type: string = "success") {
+    const toastLiveExample = document.getElementById("liveToast");
+    if (toastLiveExample) {
+      const toastBody = toastLiveExample.querySelector(".toast-body");
+      if (toastBody) {
+        toastBody.textContent = message;
+      }
+
+      toastLiveExample.classList.remove(
+        "bg-success",
+        "bg-danger",
+        "bg-warning",
+        "bg-info",
+        "text-white"
+      );
+      toastLiveExample.classList.add(`bg-${type}`, "text-white");
+
+      const toastBootstrap = new bootstrap.Toast(toastLiveExample);
+      toastBootstrap.show();
+
+      setTimeout(() => {
+        toastLiveExample.classList.remove(`bg-${type}`);
+      }, 5000);
+    }
   }
 }
 
