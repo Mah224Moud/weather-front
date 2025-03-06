@@ -7,7 +7,7 @@ import {
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { DataService } from "../../data.service";
+import { LLMService } from "../../services/llm.service";
 import marked from "marked";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { HttpClient } from "@angular/common/http";
@@ -34,7 +34,7 @@ export class LlmComponent implements AfterViewChecked {
 
   constructor(
     private http: HttpClient,
-    private service: DataService,
+    private service: LLMService,
     private sanitizer: DomSanitizer
   ) {}
 
