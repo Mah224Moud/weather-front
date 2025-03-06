@@ -1,60 +1,74 @@
-<section class="container d-flex align-items-center justify-content-around mb-5">
-    <div class="d-flex align-items-center mt-5">
-      <div class="search-wrapper">
-        <div class="search-container">
-          <input
-            type="text"
-            class="search-input"
-            [(ngModel)]="searchCity"
-            (input)="onSearchInput()"
-            placeholder="Rechercher une ville..."
-          />
-          
-          <button *ngIf="searchCity" class="clear-btn" (click)="clearSearch()">
-            ✖
-          </button>
-        </div>
-        @if (showSuggestions && filteredCities.length > 0) {
-          <div class="suggestions-container">
-            @for (city of filteredCities; track city.ville) {
-              <div 
-                class="suggestion-item"
-                (click)="selectCity(city)"
-              >
-                {{ city.ville }}
-              </div>
-            }
-          </div>
-        }
-      </div>
-    </div>
-    <div class="d-flex flex-column justify-content-center">
-      <label for="layerSelect">Sélectionner une couche :</label>
-      <select id="layerSelect" class="rounded text-uppercase" [(ngModel)]="selectedLayer" (change)="generate_map(0.5, infoCity, selectedLayer)">
-        <option *ngFor="let layer of layers" [value]="layer.valeur">
-          {{ layer.cle }}
-        </option>
-      </select>
-    </div>
+<section class="entete mx-5 px-5 d-flex flex-wrap align-items-center justify-content-around gap-1 mb-5">
+  <div class="d-flex align-items-center">
+    <div class="search-wrapper">
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-input"
+          [(ngModel)]="searchCity"
+          (input)="onSearchInput()"
+          placeholder="Rechercher une ville..."
+        />
 
-    <div>
-      <div class="popover__wrapper">
-        <div href="#">
-          <div class="weather-card">
-            <div>Ville: <span class="fw-bold">{{infoCity.ville}}</span></div>
-            <div>N° station: <span class="fw-bold">{{infoCity.numeroStation}}</span></div>
-            <div>Coordonnées:
-              <span class="fw-bold">
-                <a [href]="'https://www.google.com/maps?q=' + infoCity.latitude + ',' + infoCity.longitude" 
-                target="_blank" 
-                style="text-decoration: none; color: blue;">
-               {{ infoCity.latitude }}, {{ infoCity.longitude }}
-             </a>
-            </span></div>
-          </div>
+        <button *ngIf="searchCity" class="clear-btn" (click)="clearSearch()">
+          ✖
+        </button>
+      </div>
+      @if (showSuggestions && filteredCities.length > 0) {
+        <div class="suggestions-container">
+          @for (city of filteredCities; track city.ville) {
+            <div
+              class="suggestion-item"
+              (click)="selectCity(city)"
+            >
+              {{ city.ville }}
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+  <div class="layer d-flex flex-column justify-content-center">
+    <label for="layerSelect">Sélectionner une couche :</label>
+    <select id="layerSelect" class="rounded text-uppercase" [(ngModel)]="selectedLayer" (change)="generate_map(0.5, infoCity, selectedLayer)">
+      <option *ngFor="let layer of layers" [value]="layer.valeur">
+        {{ layer.cle }}
+      </option>
+    </select>
+  </div>
+
+  <div class="d-flex flex-column justify-content-center ">
+    <label for="timeSelect">Sélectionner un intervalle de temps :</label>
+    <select id="timeSelect" class="rounded text-uppercase" [(ngModel)]="selectedTime" (change)="updateMapWithSelectedTime()">
+      <option *ngFor="let time of timeIntervals" [value]="time">
+        {{ time }}
+      </option>
+    </select>
+  </div>
+
+  <div class="">
+    <div class="popover__wrapper">
+      <div href="#">
+        <div class="weather-card">
+          <div>Ville: <span class="fw-bold">{{infoCity.ville}}</span></div>
+          <div>N° station: <span class="fw-bold">{{infoCity.numeroStation}}</span></div>
+          <div>Coordonnées:
+            <span class="fw-bold">
+              <a [href]="'https://www.google.com/maps?q=' + infoCity.latitude + ',' + infoCity.longitude"
+              target="_blank"
+              style="text-decoration: none; color: blue;">
+             {{ infoCity.latitude }}, {{ infoCity.longitude }}
+           </a>
+          </span></div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="loading-indicator">
+    Chargement en cours...
+  </div>
+</section>
 
 <div id="map"></div>

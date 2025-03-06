@@ -18,7 +18,7 @@ export class DataService {
     "http://172.31.60.248:8080/api/donnees-climatiques/info/";
   private apiYearlyStat =
     "http://172.31.60.248:8080/api/donnees-climatiques/moyenneAll/";
-  private apiUrl = "http://localhost:11434/api/generate";
+  private apiUrl = 'http://172.31.60.248:11434/api/generate';
   private apiUrl_donneclimatique =
     "http://172.31.60.248:8080/api/donnees-climatiques";
   private apiWeeklyStat =
