@@ -217,12 +217,6 @@ Fin des règles.
     return buffer;
   }
 
-  rechercherEntreDates(Ville: string,dateDebut: string,dateFin: string): Observable<any> {
-    console.log("requete envoyé : "+ `${this.apiUrl_donneclimatique}/villedate/${Ville}?dateDebut=${dateDebut}&dateFin=${dateFin}`)
-    return this.http.get(`${this.apiUrl_donneclimatique}/villedate/${Ville}?dateDebut=${dateDebut}&dateFin=${dateFin}`);
-  }
-
-
   saveConversation(msg: string, resp: string, userID: number) {
     const conversationData = {
       idUser: userID,

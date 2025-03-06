@@ -2,11 +2,10 @@ import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { NgIf, NgFor } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { DataService } from "../../data.service";
-import { Observable, throwError } from "rxjs";
-import { catchError, switchMap } from "rxjs/operators";
 import { NgxPaginationModule } from "ngx-pagination";
 import { DecimalPipe } from "@angular/common";
 import { AuthService } from "../../services/auth.service";
+import { ConsultationService } from "../../services/consultation.service";
 import { UserInfo } from "../../models/userInfo";
 
 declare var bootstrap: any;
@@ -94,7 +93,8 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
   };
 
   constructor(
-    private dataService: DataService,
+    private dataService: DataService, 
+    private consultationService: ConsultationService,
     private authService: AuthService
   ) {}
 
@@ -195,7 +195,7 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.dataService.rechercherEntreDates(this.Ville, this.dateDebut, this.dateFin).subscribe({
+    this.consultationService.rechercherEntreDates(this.Ville, this.dateDebut, this.dateFin).subscribe({
       next: (data) => {
         this.donneesClimatiques = data;
         console.log("Données récupérées :", this.donneesClimatiques);
