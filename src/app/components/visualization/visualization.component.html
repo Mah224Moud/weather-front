@@ -71,7 +71,7 @@
   
 
     <div *ngIf="!isLoading && data.length > 0" class="d-flex flex-column justify-content-center align-items-center">
-      <h2 class="text-center">Évolution des observations climatiques de 1996 à maintenant</h2>
+      <h2 class="text-center">Évolution annuelle des observations climatiques de 1996 à maintenant</h2>
       <ngx-charts-line-chart 
         [view]="view"
         [results]="data"
@@ -88,18 +88,35 @@
       </ngx-charts-line-chart>
 
       <div class="mt-5">
-        <h2>Resumé Évolution climatique de 1996 à maintenant</h2>
-        <ngx-charts-number-card 
-        [view]="[1000, 300]" 
-        [results]="extremeData"
-        [cardColor]="'#f1f1f1'"
-        [textColor]="'#333'"
-        [scheme]="'vivid'">
-      </ngx-charts-number-card>
+        <h2>Résumé des évolutions climatiques de 1996 à maintenant</h2>
+        
+        <!-- Vérifiez si les données sont disponibles avant d'afficher le tableau -->
+        <table *ngIf="!isLoading && data.length > 0" class="table table-striped">
+          <thead>
+            <tr>
+              <th>Année</th>
+              <th>Température</th>
+              <th>Précipitations</th>
+              <th>Autre Paramètre (à adapter)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of extremeData">
+              <td>{{ item.year }}</td>
+              <td>{{ item.temperature }}</td>
+              <td>{{ item.precipitation }}</td>
+              <td>{{ item.otherParameter }}</td> <!-- Ajoutez d'autres colonnes selon vos données -->
+            </tr>
+          </tbody>
+        </table>
+        
       </div>
-    <div *ngIf="!isLoading && data.length === 0" class="no-data">
-      <p>Aucune donnée annuelle à afficher.</p>
-    </div>
+      
+      <!-- Message affiché si aucune donnée n'est présente -->
+      <div *ngIf="!isLoading && data.length === 0" class="no-data">
+        <p>Aucune donnée annuelle à afficher.</p>
+      </div>
+      
 
    
 
