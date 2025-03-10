@@ -28,7 +28,7 @@ export class LlmComponent implements AfterViewChecked {
   messages: { content: string; type: string }[] = [];
   historiques: Historique[] = [];
   sanitizedResponse: SafeHtml = "";
-    userInfo: UserInfo = { email: "", nom: "", prenom: "", id: 0 };
+  userInfo: UserInfo = { email: "", nom: "", prenom: "", id: 0 };
   showScrollButton: boolean = false;
 
   @ViewChild("conversationContainer")
@@ -38,7 +38,7 @@ export class LlmComponent implements AfterViewChecked {
     private http: HttpClient,
     private service: LLMService,
     private sanitizer: DomSanitizer,
-    private authService: AuthService,
+    private authService: AuthService
   ) {}
 
   get formattedResponse(): SafeHtml {

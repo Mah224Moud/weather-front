@@ -30,7 +30,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   registerForm: FormGroup;
   errorMessage: string = "";
-  userInfo: UserInfo = { email: "", nom: "", prenom: "", id:0 };
+  userInfo: UserInfo = { email: "", nom: "", prenom: "", id: 0 };
 
   showLoginForm: boolean = true;
   showRegisterForm: boolean = false;
@@ -118,6 +118,7 @@ export class LoginComponent {
         this.userInfo.email = response.email;
         this.userInfo.nom = response.nom;
         this.userInfo.prenom = response.prenom;
+        this.userInfo.id = response.id;
 
         this.showToast(
           "Bonjour, " + this.userInfo.prenom.toLocaleUpperCase(),
