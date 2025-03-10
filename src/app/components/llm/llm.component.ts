@@ -12,6 +12,8 @@ import marked from "marked";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { HttpClient } from "@angular/common/http";
 import { Historique } from "../../models/historique";
+import { UserInfo } from "../../models/userInfo";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
   selector: "app-llm",
@@ -26,7 +28,7 @@ export class LlmComponent implements AfterViewChecked {
   messages: { content: string; type: string }[] = [];
   historiques: Historique[] = [];
   sanitizedResponse: SafeHtml = "";
-  userID: number = 12345;
+    userInfo: UserInfo = { email: "", nom: "", prenom: "", id: 0 };
   showScrollButton: boolean = false;
 
   @ViewChild("conversationContainer")
@@ -35,7 +37,8 @@ export class LlmComponent implements AfterViewChecked {
   constructor(
     private http: HttpClient,
     private service: LLMService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private authService: AuthService,
   ) {}
 
   get formattedResponse(): SafeHtml {
@@ -43,7 +46,13 @@ export class LlmComponent implements AfterViewChecked {
   }
 
   ngOnInit(): void {
-    this.loadMsg(this.userID);
+    this.authService.user$.subscribe((user: UserInfo | null) => {
+      if (user) {
+        this.userInfo = user;
+      }
+    });
+
+    this.loadMsg(this.userInfo.id);
   }
 
   private loadMsg(id: number): void {
@@ -92,7 +101,7 @@ export class LlmComponent implements AfterViewChecked {
         this.service.saveConversation(
           this.messages[botMessageIndex - 1].content,
           this.response,
-          this.userID
+          this.userInfo.id
         );
       },
     });

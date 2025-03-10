@@ -24,7 +24,7 @@ declare var bootstrap: any;
 })
 export class AppComponent {
   isLoggedIn = false;
-  userInfo: UserInfo = { email: "", nom: "", prenom: "" };
+  userInfo: UserInfo = { email: "", nom: "", prenom: "", id: 0 };
 
   constructor(private authService: AuthService, private router: Router) {}
 

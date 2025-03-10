@@ -30,7 +30,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   registerForm: FormGroup;
   errorMessage: string = "";
-  userInfo: UserInfo = { email: "", nom: "", prenom: "" };
+  userInfo: UserInfo = { email: "", nom: "", prenom: "", id:0 };
 
   showLoginForm: boolean = true;
   showRegisterForm: boolean = false;

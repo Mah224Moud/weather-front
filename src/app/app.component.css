@@ -91,7 +91,6 @@ nav {
       background-color: white;
       animation: linear 1s;
       margin: 19px;
-      animation: bounceLoop 3s infinite ease-in-out;
   }
 
 
