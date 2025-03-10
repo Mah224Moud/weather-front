@@ -34,14 +34,6 @@
     </div>
 
     <div>
-      <label for="yearSelect" class="me-3 fw-bold">Sélectionner une année :</label>
-      <select class="rounded fw-bold fs-5" id="yearSelect" [(ngModel)]="selectedYear" (change)="onYearChange($event)">
-        <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-      </select>
-
-    </div>
-
-    <div>
       <div class="popover__wrapper">
         <div href="#">
           <div class="weather-card">
@@ -71,7 +63,7 @@
   
 
     <div *ngIf="!isLoading && data.length > 0" class="d-flex flex-column justify-content-center align-items-center">
-      <h2 class="text-center">Évolution annuelle des observations climatiques de 1996 à maintenant</h2>
+      <h2 class="text-center">Évolution des observations climatiques de 1996 à maintenant</h2>
       <ngx-charts-line-chart 
         [view]="view"
         [results]="data"
@@ -87,23 +79,44 @@
         [autoScale]="true">
       </ngx-charts-line-chart>
 
-      <div class="mt-5">
-        <h2>Resumé des évolution climatique de 1996 à maintenant</h2>
-        <ngx-charts-number-card 
-        [view]="[1000, 300]" 
-        [results]="extremeData"
-        [cardColor]="'#f1f1f1'"
-        [textColor]="'#333'"
-        [scheme]="'vivid'">
-      </ngx-charts-number-card>
+      <div class="mt-5 w-100">
+        <h2 class="text-center">Resumé Évolution climatique de 1996 à maintenant</h2>
+          <div *ngIf="!isLoading && extremeData.length > 0">
+            <p *ngFor="let data of extremeData" class="fs-4">
+              <span class="text-body-secondary">- {{ data.name }} : </span> <span class="fw-bold fs-2">{{ data.value }}</span>
+            </p>
+          </div>
       </div>
     <div *ngIf="!isLoading && data.length === 0" class="no-data">
       <p>Aucune donnée annuelle à afficher.</p>
     </div>
+    </div>
 
-   
 
-    <div *ngIf="!isLoading && weeklyData.length > 0">
+    <div>
+      <h2 class="text-center mt-4">Comparaison des températures de toutes les stations de 1996 et 2024</h2>
+      <ngx-charts-advanced-pie-chart
+      [view]="view"
+      [scheme]="'vivid'"
+      [results]="pieChartData"
+      [gradient]="true"
+      [tooltipDisabled]="false">
+    </ngx-charts-advanced-pie-chart>
+    </div>
+  </div>
+    <hr class="mt-4">
+  <hr class="mt-4">
+ 
+
+  <div>
+    <label for="yearSelect" class="me-3 fs-2 fw-bold">Sélectionner une année :</label>
+    <select class="rounded fw-bold fs-4" id="yearSelect" [(ngModel)]="selectedYear" (change)="onYearChange($event)">
+      <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+    </select>
+
+  </div>
+
+    <div *ngIf="!isLoading && weeklyData.length > 0" class="d-flex flex-column justify-content-center align-items-center">
       <h2 class="text-center mt-4">Données hebdomadaires pour {{ selectedYear }}</h2>
       <ngx-charts-line-chart 
         [view]="view"
@@ -119,24 +132,10 @@
         [yAxisLabel]="'Valeurs'"
         [autoScale]="true">
       </ngx-charts-line-chart>
-  <hr class="mt-4">
-  <hr class="mt-4">
-
-      <div>
-        <h2 class="text-center mt-4">Comparaison des températures de toutes les stations de 1996 et 2024</h2>
-        <ngx-charts-advanced-pie-chart
-        [view]="view"
-        [scheme]="'vivid'"
-        [results]="pieChartData"
-        [gradient]="true"
-        [tooltipDisabled]="false">
-      </ngx-charts-advanced-pie-chart>
-      </div>
-    </div>
 
     <div *ngIf="!isLoading && weeklyData.length === 0" class="no-data">
       <p>Aucune donnée hebdomadaire disponible pour {{ selectedYear }}.</p>
+      </div>
+    
     </div>
-  
   </div>
-</div>

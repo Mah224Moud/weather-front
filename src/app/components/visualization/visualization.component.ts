@@ -112,10 +112,10 @@ export class VisualizationComponent implements OnInit {
     const minPrec = rData.reduce((prev, curr) => (curr.precipitation < prev.precipitation ? curr : prev));
 
     this.extremeData = [
-      { name: `Température Max (${maxTemp.annee})`, value: Math.round(maxTemp.temperature) },
-      { name: `Température Min (${minTemp.annee})`, value: Math.round(minTemp.temperature) },
-      { name: `Précipitation Max (${maxPrec.annee})`, value: Math.round(maxPrec.precipitation / 10) },
-      { name: `Précipitation Min (${minPrec.annee})`, value: Math.round(minPrec.precipitation / 10) }
+      { name: `La moyenne des températures maximal a eu lieu en ${maxTemp.annee} et est de `, value: Math.round(maxTemp.temperature)+"°C" },
+      { name: `La moyenne des températures minimal a eu lieu en ${minTemp.annee} et est de `, value: Math.round(minTemp.temperature)+"°C" },
+      { name: `La moyenne des precipitations maximal a eu lieu en ${maxPrec.annee} et est de `, value: Math.round(maxPrec.precipitation / 10)+"cm" },
+      { name: `La moyenne des precipitations minimal a eu lieu en ${minPrec.annee} et est de `, value: Math.round(minPrec.precipitation / 10)+"cm" }
     ];
     
 
