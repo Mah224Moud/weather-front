@@ -24,9 +24,17 @@ export class VisualizationComponent implements OnInit {
   infoCity: City = { id: 0, numeroStation: 0, ville: '', latitude: 0, longitude: 0, altitude: 0 };
   num_stat = 0;
 
+  topCanicule: any[] = [];
+  topFroid: any[] = [];
 
+  DailyData: any[] = [];
+  DailyData2: any[] = [];
   weeklyData: any[] = [];
   rawWeeklyData: any[] = [];
+  rawDailyData: any[] = [];
+  rawDailyData2: any[] = [];
+
+  rawCanicule: any[] = [];
 
   view: [number, number] = [window.innerWidth * 0.9, 600]; 
   showXAxis = true;
@@ -40,8 +48,10 @@ export class VisualizationComponent implements OnInit {
 
 
   years: number[] = [];
+  months: number[] = [];
   selectedYear: number = new Date().getFullYear();
-
+  selectedMonth: number = new Date().getMonth();
+  
   averge: any[] = [];
   pieChartData: any[] = [];
   extremeData: any[] = [];
@@ -50,10 +60,15 @@ export class VisualizationComponent implements OnInit {
   constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
+    console.warn = function() {};
     this.getLocations();
     window.addEventListener('resize', this.onResize);
     this.populateYears();
+    this.populateMonths();
     this.getAvergeStats();
+    this.generateDailyBarChart(this.selectedYear, this.selectedMonth);
+    this.generateDailyBarChart2(this.selectedYear, this.selectedMonth);
+    this.generateChartTopChaud();
   }
 
   onResize = () => {
@@ -81,11 +96,25 @@ export class VisualizationComponent implements OnInit {
     const currentYear = new Date().getFullYear();
     this.years = Array.from({ length: currentYear - startYear + 1 }, (_, i) => startYear + i);
   }
+
+  populateMonths() {
+    this.months = Array.from({ length: 12 }, (_, i) => i + 1);
+  }
+  
   
   onYearChange(event: any) {
     this.selectedYear = event.target.value;
     this.generateWeeklyChart(this.infoCity.numeroStation, this.selectedYear);
+    this.generateDailyBarChart(this.selectedYear, this.selectedMonth);
+    this.generateDailyBarChart2(this.selectedYear, this.selectedMonth);
   }
+
+  onMonthChange(event: any) {
+    this.selectedMonth = event.target.value;
+    this.generateDailyBarChart(this.selectedYear, this.selectedMonth);
+    this.generateDailyBarChart2(this.selectedYear, this.selectedMonth);
+  }
+
 
   private updateChart() {
     const keys = ["temperature", "pression", "wind_speed", "precipitation"];
@@ -100,7 +129,7 @@ export class VisualizationComponent implements OnInit {
       }))
     }));
   
-    console.log("Graphique mis à jour", this.data);
+    //console.log("Graphique mis à jour", this.data);
 }
 
   private updateExtremeChart() {
@@ -114,12 +143,12 @@ export class VisualizationComponent implements OnInit {
     this.extremeData = [
       { name: `La moyenne des températures maximal a eu lieu en ${maxTemp.annee} et est de `, value: Math.round(maxTemp.temperature)+"°C" },
       { name: `La moyenne des températures minimal a eu lieu en ${minTemp.annee} et est de `, value: Math.round(minTemp.temperature)+"°C" },
-      { name: `La moyenne des precipitations maximal a eu lieu en ${maxPrec.annee} et est de `, value: Math.round(maxPrec.precipitation / 10)+"cm" },
-      { name: `La moyenne des precipitations minimal a eu lieu en ${minPrec.annee} et est de `, value: Math.round(minPrec.precipitation / 10)+"cm" }
+      { name: `La moyenne des precipitations maximal a eu lieu en ${maxPrec.annee} et est de `, value: Math.round(maxPrec.precipitation / 10)+" cm" },
+      { name: `La moyenne des precipitations minimal a eu lieu en ${minPrec.annee} et est de `, value: Math.round(minPrec.precipitation / 10)+" cm" }
     ];
     
 
-    console.log("Graphique extrême mis à jour", this.extremeData);
+    //console.log("Graphique extrême mis à jour", this.extremeData);
   }
     
   clearSearch() {
@@ -133,7 +162,7 @@ export class VisualizationComponent implements OnInit {
     this.dataService.getYearlyStats(num_station).subscribe({
       next: (response: any) => {
         this.rawData = response;
-        console.log("Chargement des données: ", this.rawData);
+        //console.log("Chargement des données: ", this.rawData);
       },
       error: (err) => {
         console.error('Erreur:', err);
@@ -145,7 +174,7 @@ export class VisualizationComponent implements OnInit {
     this.dataService.getAvergeStats().subscribe({
       next: (response: any) => {
         this.averge = response;
-        console.log("Données moyennes", this.averge)
+        //console.log("Données moyennes", this.averge)
         this.preparePieChartData();
       },
       error: (err) => console.error('Erreur:', err)
@@ -188,13 +217,51 @@ export class VisualizationComponent implements OnInit {
     this.dataService.getWeeklyStats(num_station, year).subscribe({
       next: (response: any) => {
         this.rawWeeklyData = response;
-        console.log("Chargement des données hebdomadaire: ", this.rawWeeklyData);
+        //console.log("Chargement des données hebdomadaire: ", this.rawWeeklyData);
       },
       error: (err) => {
         console.error('Erreur:', err);
       }
     });
   }
+
+  private getDailyStats(year: number, month: number): void {
+    this.dataService.getDailyStats(year, month).subscribe({
+      next: (response: any) => {
+        this.rawDailyData = response;
+        //console.log("Chargement des données journaliers: ", this.rawDailyData);
+      },
+      error: (err) => {
+        console.error('Erreur:', err);
+      }
+    });
+  }
+
+  private getDailyStats2(year: number, month: number): void {
+    this.dataService.getDailyStatsVUE(year, month).subscribe({
+      next: (response: any) => {
+        this.rawDailyData2 = response;
+        //console.log("Chargement des données journaliers: ", this.rawDailyData2);
+      },
+      error: (err) => {
+        console.error('Erreur:', err);
+      }
+    });
+  }
+
+  private getCanicule(): void {
+    this.dataService.getTopCanicule().subscribe({
+      next: (response: any) => {
+        this.rawCanicule = response;
+        //console.log("Chargement des données journaliers: ", this.rawDailyData2);
+      },
+      error: (err) => {
+        console.error('Erreur:', err);
+      }
+    });
+  }
+
+
 
   private updateWeeklyChart() {
     if (!this.rawWeeklyData || this.rawWeeklyData.length === 0) {
@@ -218,13 +285,34 @@ export class VisualizationComponent implements OnInit {
           value: item[key as keyof typeof this.rawWeeklyData[0]] ?? 0
         }))
     }));
-}
+  }
+
+  private updateDailyChart() {
+    if (!this.rawDailyData || this.rawDailyData.length === 0) {
+      console.warn("❌ Données journalier non disponibles !");
+      return;
+    }
+    this.DailyData = this.rawDailyData.map(item => ({
+      name: item[0],  
+      value: item[1] 
+    }));
+  }
+  private updateDailyChart2() {
+    if (!this.rawDailyData2 || this.rawDailyData2.length === 0) {
+      console.warn("❌ Données journalier non disponibles !");
+      return;
+    }
+    this.DailyData2 = this.rawDailyData2.map(item => ({
+      name: item[0],  
+      value: item[1] 
+    }));
+  }
 
     private getLocations(): void {
       this.dataService.getLocalisations().subscribe({
         next: (response: City[]) => {
           this.cities = response;
-          console.log('Villes chargées:', this.cities);
+          //console.log('Villes chargées:', this.cities);
           
           const c = this.cities.find(c => c.ville.includes('DIJON')) || this.cities[0];
           if ( c ) {
@@ -258,6 +346,35 @@ export class VisualizationComponent implements OnInit {
     
       setTimeout(() => {
       this.updateWeeklyChart();
+      this.isLoading = false;
+      },1000);
+    }
+
+    generateDailyBarChart(year: number, month: number){
+      this.isLoading = true;
+      this.getDailyStats(year, month);
+    
+      setTimeout(() => {
+      this.updateDailyChart();
+      this.isLoading = false;
+      },3000);
+    }
+
+    generateDailyBarChart2(year: number, month: number){
+      this.isLoading = true;
+      this.getDailyStats2(year, month);
+    
+      setTimeout(() => {
+      this.updateDailyChart2();
+      this.isLoading = false;
+      },2000);
+    }
+    generateChartTopChaud(){
+      this.isLoading = true;
+      this.getCanicule();
+    
+      setTimeout(() => {
+      this.updateDailyChart2();
       this.isLoading = false;
       },1000);
     }

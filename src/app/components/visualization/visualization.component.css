@@ -497,3 +497,25 @@ body {
   transition: all ease-in-out 0.5s;
   transform: rotate(90deg);
 }
+
+/* .hover-effect {
+  position: relative; 
+}
+
+.hover-effect::after {
+  content: "(Utilise des requêtes sur des vues)"; 
+  position: absolute;
+  font-size: medium;
+  top: 100%; 
+  left: 0;
+  width: 100%;
+  text-align: center;
+  opacity: 0; 
+  transition: opacity 0.3s ease; 
+}
+
+.hover-effect:hover::after {
+  opacity: 1; 
+}
+
+ */
