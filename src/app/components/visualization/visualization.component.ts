@@ -33,9 +33,12 @@ export class VisualizationComponent implements OnInit {
   rawWeeklyData: any[] = [];
   rawDailyData: any[] = [];
   rawDailyData2: any[] = [];
-
+  rawDeltaData: any[] = [];
   rawCanicule: any[] = [];
+  rawFroid: any[] = [];
 
+  delta: any[] = [];
+  
   view: [number, number] = [window.innerWidth * 0.9, 600]; 
   showXAxis = true;
   showYAxis = true;
@@ -69,6 +72,7 @@ export class VisualizationComponent implements OnInit {
     this.generateDailyBarChart(this.selectedYear, this.selectedMonth);
     this.generateDailyBarChart2(this.selectedYear, this.selectedMonth);
     this.generateChartTopChaud();
+    this.generateChartTopFroid();
   }
 
   onResize = () => {
@@ -90,6 +94,29 @@ export class VisualizationComponent implements OnInit {
     this.isLoading = false;
     },1000);
   }
+
+  generateChartDelta(numStation: number){
+    this.isLoading = true;
+    this.getDelta(numStation);
+  
+    setTimeout(() => {
+      this.delta = this.rawDeltaData.map(item => ({
+        name: this.formatDate(item[2]),  // Formate la date
+        value: item[1]
+      }));
+    this.isLoading = false;
+    },2000);
+  }
+
+  formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  
+  // Affiche "YYYY-YYYY" pour l'intervalle entre l'année précédente et l'année actuelle
+  const previousYear = year - 1;
+  return `${previousYear}-${year}`;
+}
+
 
   populateYears() {
     const startYear = 1996;
@@ -225,6 +252,18 @@ export class VisualizationComponent implements OnInit {
     });
   }
 
+  private getDelta(numeroStation: number): void {
+    this.dataService.getDeltaTemperatures(numeroStation).subscribe({
+      next: (response: any) => {
+        this.rawDeltaData = response;
+        console.log("Chargement des données delta: ", this.rawDeltaData);
+      },
+      error: (err) => {
+        console.error('Erreur:', err);
+      }
+    });
+  }
+
   private getDailyStats(year: number, month: number): void {
     this.dataService.getDailyStats(year, month).subscribe({
       next: (response: any) => {
@@ -261,6 +300,17 @@ export class VisualizationComponent implements OnInit {
     });
   }
 
+  private getFroid(): void {
+    this.dataService.getTopFroid().subscribe({
+      next: (response: any) => {
+        this.rawFroid = response;
+        //console.log("Chargement des données journaliers: ", this.rawDailyData2);
+      },
+      error: (err) => {
+        console.error('Erreur:', err);
+      }
+    });
+  }
 
 
   private updateWeeklyChart() {
@@ -320,6 +370,7 @@ export class VisualizationComponent implements OnInit {
             this.infoCity = c;
             this.generateChart(c.numeroStation);
             this.generateWeeklyChart(c.numeroStation, this.selectedYear);
+            this.generateChartDelta(c.numeroStation)
           }
         },
         error: (err) => {
@@ -347,7 +398,7 @@ export class VisualizationComponent implements OnInit {
       setTimeout(() => {
       this.updateWeeklyChart();
       this.isLoading = false;
-      },1000);
+      },2000);
     }
 
     generateDailyBarChart(year: number, month: number){
@@ -369,21 +420,32 @@ export class VisualizationComponent implements OnInit {
       this.isLoading = false;
       },2000);
     }
+
     generateChartTopChaud(){
       this.isLoading = true;
       this.getCanicule();
     
       setTimeout(() => {
-      this.updateDailyChart2();
+      //this.updateDailyChart2();
       this.isLoading = false;
       },1000);
     }
-  
+
+    generateChartTopFroid(){
+      this.isLoading = true;
+      this.getFroid();
+    
+      setTimeout(() => {
+      //this.updateDailyChart2();
+      this.isLoading = false;
+      },1000);
+    }
     selectCity(city: City) {
       this.searchCity = city.ville;
       this.showSuggestions = false;
       this.infoCity = city;
       this.generateChart(city.numeroStation);
       this.generateWeeklyChart(city.numeroStation, this.selectedYear);
+      this.generateChartDelta(city.numeroStation)
     }
 }
