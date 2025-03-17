@@ -57,6 +57,7 @@ export class VisualizationComponent implements OnInit {
   
   averge: any[] = [];
   pieChartData: any[] = [];
+  averageStatDetails: any[] = [];
   extremeData: any[] = [];
 
 
@@ -92,7 +93,7 @@ export class VisualizationComponent implements OnInit {
     this.updateChart();
     this.updateExtremeChart();
     this.isLoading = false;
-    },1000);
+    },2500);
   }
 
   generateChartDelta(numStation: number){
@@ -209,36 +210,72 @@ export class VisualizationComponent implements OnInit {
   }
 
   preparePieChartData() {
-    const categories = {
-      "Baisse significative (< 0°C)": 0,
-      "Stable ou légère hausse (0°C à 1°C)": 0,
-      "Hausse modérée (1°C à 2°C)": 0,
-      "Hausse marquée (2°C à 3°C)": 0,
-      "Forte hausse (> 3°C)": 0
+    // Déclarez categories comme un dictionnaire avec des clés spécifiques de type string
+    const categories: { [key: string]: number[] } = {
+      "Baisse significative (< 0°C)": [],
+      "Stable ou légère hausse (0°C à 1°C)": [],
+      "Hausse modérée (1°C à 2°C)": [],
+      "Hausse marquée (2°C à 3°C)": [],
+      "Forte hausse (> 3°C)": []
     };
   
+    // Filtrage des stations selon les critères de température
     this.averge.forEach((station) => {
       const delta = station.deltaTemp1996vs2024;
-      
+  
+      let category: string | null = null;
+  
       if (delta < 0) {
-        categories["Baisse significative (< 0°C)"]++;
+        category = "Baisse significative (< 0°C)";
       } else if (delta >= 0 && delta < 1) {
-        categories["Stable ou légère hausse (0°C à 1°C)"]++;
+        category = "Stable ou légère hausse (0°C à 1°C)";
       } else if (delta >= 1 && delta < 2) {
-        categories["Hausse modérée (1°C à 2°C)"]++;
+        category = "Hausse modérée (1°C à 2°C)";
       } else if (delta >= 2 && delta < 3) {
-        categories["Hausse marquée (2°C à 3°C)"]++;
+        category = "Hausse marquée (2°C à 3°C)";
       } else {
-        categories["Forte hausse (> 3°C)"]++;
+        category = "Forte hausse (> 3°C)";
+      }
+  
+      // Si une catégorie est trouvée, on associe la station
+      if (category) {
+        categories[category].push(station.station);
       }
     });
   
+    // Maintenant, nous avons les numéros de stations filtrés, on peut les mapper avec les données de cities
+    this.averageStatDetails = [];
+  
+    Object.keys(categories).forEach((category) => {
+      const stationsInCategory = categories[category];
+  
+      // Pour chaque station de la catégorie, on va chercher les détails dans `cities`
+      stationsInCategory.forEach((stationId) => {
+        const city = this.cities.find((city) => city.numeroStation === stationId);
+  
+        if (city) {
+          // Ajoutez les détails dans `averageStatDetails`
+          this.averageStatDetails.push({
+            category,
+            stationId,
+            cityName: city.ville,
+            latitude: city.latitude,
+            longitude: city.longitude,
+            altitude: city.altitude,
+          });
+        }
+      });
+    });
+  
+    console.log('averageStatDetails:', this.averageStatDetails);
+  
+    // Préparation des données pour le graphique à secteurs (pie chart)
     this.pieChartData = Object.keys(categories).map((key) => ({
       name: key,
-      value: (categories as any)[key]
-
+      value: categories[key].length
     }));
   }
+  
   
   private getWeeklyStats(num_station: number, year: number): void {
     this.dataService.getWeeklyStats(num_station, year).subscribe({
