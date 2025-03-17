@@ -99,24 +99,24 @@ export class AromeComponent implements OnInit {
     const date7: Date = new Date(baseDate);
     const date8: Date = new Date(baseDate);
 
-    // Ajoute les intervalles de 3 heures à chaque date
-    date1.setHours(baseDate.getHours() + 0);  // 0 heure du jour
-    date2.setHours(baseDate.getHours() + 3);  // +3 heures
-    date3.setHours(baseDate.getHours() + 6);  // +6 heures
-    date4.setHours(baseDate.getHours() + 9);  // +9 heures
-    date5.setHours(baseDate.getHours() + 12); // +12 heures
-    date6.setHours(baseDate.getHours() + 15); // +15 heures
-    date7.setHours(baseDate.getHours() + 18); // +18 heures
-    date8.setHours(baseDate.getHours() + 21); // +21 heures
+    
+    date1.setHours(baseDate.getHours() + 0);  
+    date2.setHours(baseDate.getHours() + 3);  
+    date3.setHours(baseDate.getHours() + 6);  
+    date4.setHours(baseDate.getHours() + 9);  
+    date5.setHours(baseDate.getHours() + 12); 
+    date6.setHours(baseDate.getHours() + 15); 
+    date7.setHours(baseDate.getHours() + 18); 
+    date8.setHours(baseDate.getHours() + 21); 
 
-    // Fonction pour formater la date au format souhaité : YYYY-MM-DDTHH:mm:ssZ
+ 
     function formatDateToCustomISOString(date: Date): string {
       const year = date.getUTCFullYear();
-      const month = String(date.getUTCMonth() + 1).padStart(2, '0');  // Les mois commencent à 0, donc on ajoute 1
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0');  
       const day = String(date.getUTCDate()).padStart(2, '0');
       const hours = String(date.getUTCHours()).padStart(2, '0');
       const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-      const seconds = String(date.getUTCSeconds()).padStart(2, '0');  // Les secondes sur 2 chiffres
+      const seconds = String(date.getUTCSeconds()).padStart(2, '0');
 
       return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
     }
@@ -130,7 +130,7 @@ export class AromeComponent implements OnInit {
     this.timeIntervals.push(formatDateToCustomISOString(date7)); // Ajoute la date au tableau
     this.timeIntervals.push(formatDateToCustomISOString(date8)); // Ajoute la date au tableau
 
-    // Sélectionne le premier intervalle de temps par défaut
+ 
     this.selectedTime = this.timeIntervals[0];
   }
 

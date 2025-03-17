@@ -1,18 +1,7 @@
-<!-- <div class="chat-container my-5">
-  <div class="d-flex flex-column align-items-center gap-1">
-    <textarea [(ngModel)]="userMessage" placeholder="Posez votre question..." (keyup.enter)="sendMessage()"> </textarea>
-    <button (click)="sendMessage()" class="btn btn-outline-primary">Envoyer</button>
-  </div>
 
-  <div class="container mt-5">
-    <div *ngIf="isWaiting" class="loading">Chargement...</div>
-    <div class="response-box" [innerHTML]="formattedResponse"></div>
-  </div>
-  
-</div> -->
 
 <div class="chat-container pt-5 mb-5">
-  <!-- Conteneur des messages avec défilement automatique -->
+
   <div class="conversation-container" #conversationContainer>
     <div *ngFor="let message of messages; let i = index">
       <div
@@ -28,7 +17,7 @@
     <div *ngIf="isWaiting" class="loading">Chargement...</div>
   </div>
 
-  <!-- Zone d'entrée de message et bouton envoyer -->
+
   <div class="input-container bg-dark">
     <textarea
       [(ngModel)]="userMessage"

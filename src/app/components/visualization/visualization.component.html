@@ -1,7 +1,6 @@
 <div class="container">
   <h1 class="text-center">Évolution des indicateurs climatiques</h1>
 
-  <!-- Section de recherche de ville -->
   <section class="container d-flex align-items-center justify-content-around mb-5">
     <div class="d-flex align-items-center mt-4">
       <div class="search-wrapper">
@@ -27,7 +26,6 @@
       </div>
     </div>
 
-    <!-- Informations sur la ville sélectionnée -->
     <div>
       <div class="popover__wrapper">
         <div>
@@ -51,9 +49,7 @@
     </div>
   </section>
 
-  <!-- Section de données climatiques -->
   <div class="container d-flex flex-column align-items-center">
-    <!-- Chargement -->
     <div *ngIf="isLoading" class="spinner-container d-flex flex-column">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Chargement...</span>
@@ -61,7 +57,6 @@
       <span>Chargement...</span>
     </div>
 
-    <!-- Graphiques de données -->
     <div *ngIf="!isLoading && data.length > 0" class="d-flex flex-column justify-content-center align-items-center">
       <h2 class="text-center">Évolution des observations climatiques de 1996 à maintenant</h2>
       <ngx-charts-line-chart
@@ -89,13 +84,11 @@
         </div>
       </div>
 
-      <!-- Message si aucune donnée -->
       <div *ngIf="!isLoading && data.length === 0" class="no-data">
         <p>Aucune donnée annuelle à afficher.</p>
       </div>
     </div>
 
-    <!-- Graphique de comparaison des températures -->
     <div>
       <h2 class="text-center mt-4">Comparaison des températures de toutes les stations de 1996 et 2024</h2>
       <ngx-charts-advanced-pie-chart
@@ -128,7 +121,6 @@
     </table>
   </div>
 
-  <!-- Sélecteurs de date -->
 
   <div class="row align-items-center my-5">
     <hr class="mt-4">
@@ -147,7 +139,6 @@
     </div>
   </div>
 
-  <!-- Données hebdomadaires -->
   <div class="d-flex flex-column justify-content-center align-items-center">
     <h2 class="text-center mt-4">Données hebdomadaires pour {{ selectedYear }}</h2>
     <ngx-charts-line-chart
@@ -166,7 +157,7 @@
     ></ngx-charts-line-chart>
   </div>
 
-  <!-- Données journalières -->
+
   <hr class="mt-6">
   <div *ngIf="!isLoading && DailyData.length > 0" class="d-flex flex-column justify-content-center align-items-center">
     <h2 class="text-center mt-4">Données journalières pour le mois n°{{ selectedMonth }} de l'année {{ selectedYear }} (Table)</h2>
@@ -184,7 +175,6 @@
     </div>
   </div>
 
-  <!-- Données journalières 2 -->
   <div *ngIf="!isLoading && DailyData2.length > 0" class="d-flex flex-column justify-content-center align-items-center">
     <h2 class="text-center mt-4">Données journalières pour le mois n°{{ selectedMonth }} de l'année {{ selectedYear }} (Vue)</h2>
     <ngx-charts-bar-vertical
@@ -202,8 +192,6 @@
   </div>
 
 
-
-  <!-- Top 15 des jours les plus chauds -->
   <div class="my-5">
     <hr class="mt-4">
     <h2 class="text-center">Top 15 des Jours les Plus Chauds en France</h2>
@@ -234,7 +222,6 @@
   </div>
 
 
-  <!-- Top 15 des jours les plus froids -->
   <div class="my-5">
 
   <hr class="mt-4">
