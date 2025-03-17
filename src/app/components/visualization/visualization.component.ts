@@ -102,7 +102,7 @@ export class VisualizationComponent implements OnInit {
   
     setTimeout(() => {
       this.delta = this.rawDeltaData.map(item => ({
-        name: this.formatDate(item[2]),  // Formate la date
+        name: this.formatDate(item[2]),  
         value: item[1]
       }));
     this.isLoading = false;
@@ -113,7 +113,6 @@ export class VisualizationComponent implements OnInit {
   const date = new Date(dateString);
   const year = date.getFullYear();
   
-  // Affiche "YYYY-YYYY" pour l'intervalle entre l'année précédente et l'année actuelle
   const previousYear = year - 1;
   return `${previousYear}-${year}`;
 }
@@ -156,8 +155,7 @@ export class VisualizationComponent implements OnInit {
           : item[key as keyof YearlyStat]
       }))
     }));
-  
-    //console.log("Graphique mis à jour", this.data);
+
 }
 
   private updateExtremeChart() {
@@ -176,7 +174,6 @@ export class VisualizationComponent implements OnInit {
     ];
     
 
-    //console.log("Graphique extrême mis à jour", this.extremeData);
   }
     
   clearSearch() {
@@ -190,7 +187,7 @@ export class VisualizationComponent implements OnInit {
     this.dataService.getYearlyStats(num_station).subscribe({
       next: (response: any) => {
         this.rawData = response;
-        //console.log("Chargement des données: ", this.rawData);
+
       },
       error: (err) => {
         console.error('Erreur:', err);
@@ -202,7 +199,6 @@ export class VisualizationComponent implements OnInit {
     this.dataService.getAvergeStats().subscribe({
       next: (response: any) => {
         this.averge = response;
-        //console.log("Données moyennes", this.averge)
         this.preparePieChartData();
       },
       error: (err) => console.error('Erreur:', err)
@@ -210,7 +206,6 @@ export class VisualizationComponent implements OnInit {
   }
 
   preparePieChartData() {
-    // Déclarez categories comme un dictionnaire avec des clés spécifiques de type string
     const categories: { [key: string]: number[] } = {
       "Baisse significative (< 0°C)": [],
       "Stable ou légère hausse (0°C à 1°C)": [],
@@ -219,7 +214,7 @@ export class VisualizationComponent implements OnInit {
       "Forte hausse (> 3°C)": []
     };
   
-    // Filtrage des stations selon les critères de température
+
     this.averge.forEach((station) => {
       const delta = station.deltaTemp1996vs2024;
   
@@ -237,24 +232,22 @@ export class VisualizationComponent implements OnInit {
         category = "Forte hausse (> 3°C)";
       }
   
-      // Si une catégorie est trouvée, on associe la station
       if (category) {
         categories[category].push(station.station);
       }
     });
   
-    // Maintenant, nous avons les numéros de stations filtrés, on peut les mapper avec les données de cities
     this.averageStatDetails = [];
   
     Object.keys(categories).forEach((category) => {
       const stationsInCategory = categories[category];
   
-      // Pour chaque station de la catégorie, on va chercher les détails dans `cities`
+
       stationsInCategory.forEach((stationId) => {
         const city = this.cities.find((city) => city.numeroStation === stationId);
   
         if (city) {
-          // Ajoutez les détails dans `averageStatDetails`
+
           this.averageStatDetails.push({
             category,
             stationId,
@@ -269,7 +262,7 @@ export class VisualizationComponent implements OnInit {
   
     console.log('averageStatDetails:', this.averageStatDetails);
   
-    // Préparation des données pour le graphique à secteurs (pie chart)
+
     this.pieChartData = Object.keys(categories).map((key) => ({
       name: key,
       value: categories[key].length
@@ -281,7 +274,6 @@ export class VisualizationComponent implements OnInit {
     this.dataService.getWeeklyStats(num_station, year).subscribe({
       next: (response: any) => {
         this.rawWeeklyData = response;
-        //console.log("Chargement des données hebdomadaire: ", this.rawWeeklyData);
       },
       error: (err) => {
         console.error('Erreur:', err);
@@ -305,7 +297,6 @@ export class VisualizationComponent implements OnInit {
     this.dataService.getDailyStats(year, month).subscribe({
       next: (response: any) => {
         this.rawDailyData = response;
-        //console.log("Chargement des données journaliers: ", this.rawDailyData);
       },
       error: (err) => {
         console.error('Erreur:', err);
@@ -317,7 +308,6 @@ export class VisualizationComponent implements OnInit {
     this.dataService.getDailyStatsVUE(year, month).subscribe({
       next: (response: any) => {
         this.rawDailyData2 = response;
-        //console.log("Chargement des données journaliers: ", this.rawDailyData2);
       },
       error: (err) => {
         console.error('Erreur:', err);
@@ -329,7 +319,6 @@ export class VisualizationComponent implements OnInit {
     this.dataService.getTopCanicule().subscribe({
       next: (response: any) => {
         this.rawCanicule = response;
-        //console.log("Chargement des données journaliers: ", this.rawDailyData2);
       },
       error: (err) => {
         console.error('Erreur:', err);
@@ -341,7 +330,6 @@ export class VisualizationComponent implements OnInit {
     this.dataService.getTopFroid().subscribe({
       next: (response: any) => {
         this.rawFroid = response;
-        //console.log("Chargement des données journaliers: ", this.rawDailyData2);
       },
       error: (err) => {
         console.error('Erreur:', err);
@@ -399,7 +387,6 @@ export class VisualizationComponent implements OnInit {
       this.dataService.getLocalisations().subscribe({
         next: (response: City[]) => {
           this.cities = response;
-          //console.log('Villes chargées:', this.cities);
           
           const c = this.cities.find(c => c.ville.includes('DIJON')) || this.cities[0];
           if ( c ) {
@@ -463,7 +450,6 @@ export class VisualizationComponent implements OnInit {
       this.getCanicule();
     
       setTimeout(() => {
-      //this.updateDailyChart2();
       this.isLoading = false;
       },1000);
     }
@@ -473,7 +459,6 @@ export class VisualizationComponent implements OnInit {
       this.getFroid();
     
       setTimeout(() => {
-      //this.updateDailyChart2();
       this.isLoading = false;
       },1000);
     }
