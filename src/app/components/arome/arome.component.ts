@@ -46,6 +46,11 @@ export class AromeComponent implements OnInit {
     this.generateThreeHourIntervals();
   }
 
+/**
+ * Initializes the Leaflet map centered on France with a default zoom level.
+ * Adds OpenStreetMap tile layer to the map with proper attribution.
+ */
+
   private initMap(): void {
     this.map = L.map('map', {
       center: [46.603354, 1.888334],
@@ -56,6 +61,18 @@ export class AromeComponent implements OnInit {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(this.map);
   }
+
+/**
+ * Retrieves a list of cities and adds a default "FRANCE" city.
+ *
+ * Subscribes to the `getLocalisations` service to get the list of cities and
+ * logs the loaded cities to the console. A default city "FRANCE" is added to
+ * the list. The method then selects the city named "FRANCE" or defaults to
+ * the first city in the list. Updates the `searchCity` and `infoCity` properties
+ * with the selected city and generates a map overlay for the selected layer.
+ *
+ * If an error occurs during the subscription, it logs the error to the console.
+ */
 
   private getLocations(): void {
     this.dataService.getLocalisations().subscribe({
@@ -84,6 +101,12 @@ export class AromeComponent implements OnInit {
     });
   }
 
+  /**
+   * Generates an array of 8 ISO 8601 formatted date strings, each 3 hours apart from the current time.
+   * The array is stored in the component's timeIntervals property.
+   * The selectedTime property is set to the first element of the array.
+   * The function is called when the component is initialized.
+   */
   generateThreeHourIntervals(): void {
     const today = new Date();  
     const baseDate = new Date(today);
@@ -110,6 +133,13 @@ export class AromeComponent implements OnInit {
     date8.setHours(baseDate.getHours() + 21); 
 
  
+  /**
+   * Converts a Date object to a custom ISO 8601 string representation.
+   * The output format is: "YYYY-MM-DDTHH:MM:SSZ".
+   * The time is in UTC.
+   * @param date The Date object to format.
+   * @returns A string in the custom ISO 8601 format.
+   */
     function formatDateToCustomISOString(date: Date): string {
       const year = date.getUTCFullYear();
       const month = String(date.getUTCMonth() + 1).padStart(2, '0');  
@@ -121,26 +151,34 @@ export class AromeComponent implements OnInit {
       return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
     }
 
-    this.timeIntervals.push(formatDateToCustomISOString(date1)); // Ajoute la date au tableau
-    this.timeIntervals.push(formatDateToCustomISOString(date2)); // Ajoute la date au tableau
-    this.timeIntervals.push(formatDateToCustomISOString(date3)); // Ajoute la date au tableau
-    this.timeIntervals.push(formatDateToCustomISOString(date4)); // Ajoute la date au tableau
-    this.timeIntervals.push(formatDateToCustomISOString(date5)); // Ajoute la date au tableau
-    this.timeIntervals.push(formatDateToCustomISOString(date6)); // Ajoute la date au tableau
-    this.timeIntervals.push(formatDateToCustomISOString(date7)); // Ajoute la date au tableau
-    this.timeIntervals.push(formatDateToCustomISOString(date8)); // Ajoute la date au tableau
+    this.timeIntervals.push(formatDateToCustomISOString(date1)); 
+    this.timeIntervals.push(formatDateToCustomISOString(date2)); 
+    this.timeIntervals.push(formatDateToCustomISOString(date3)); 
+    this.timeIntervals.push(formatDateToCustomISOString(date4)); 
+    this.timeIntervals.push(formatDateToCustomISOString(date5)); 
+    this.timeIntervals.push(formatDateToCustomISOString(date6)); 
+    this.timeIntervals.push(formatDateToCustomISOString(date7)); 
+    this.timeIntervals.push(formatDateToCustomISOString(date8)); 
 
  
     this.selectedTime = this.timeIntervals[0];
   }
 
+  /**
+   * Returns the location of the given city, or "AUCUN" if it is not found.
+   * @param city The city to look up.
+   * @returns The location of the city.
+   */
   VilleLoc(city: string): string {
-    const villes = VILLES;
-  
-    // Retourne la localisation en fonction de la ville
-    return villes[city] || "AUCUN"; // "AUCUN" par défaut si la ville n'est pas trouvée
+    const villes = VILLES;  
+    return villes[city] || "AUCUN"; 
   }
   
+  /**
+   * Called when the user inputs a search query in the search bar.
+   * Filters the list of cities based on the search query,
+   * and shows or hides the suggestions list accordingly.
+   */
   onSearchInput() {
     if (this.searchCity.trim()) {
       this.showSuggestions = true;
@@ -153,6 +191,12 @@ export class AromeComponent implements OnInit {
     }
   }
 
+/**
+ * Sets the selected city and hides the suggestions list. Updates the map
+ * with the selected city and layer.
+ * @param {City} city - The city to select.
+ */
+
   selectCity(city: City) {
     this.searchCity = city.ville;
     this.showSuggestions = false;
@@ -161,6 +205,10 @@ export class AromeComponent implements OnInit {
     //console.log(city.numeroStation)
   }
 
+  /**
+   * Adds a marker for each city on the map, except for the "FRANCE" city.
+   * It also updates the map bounds to include all the added markers.
+   */
   updatePins() {
     let bounds = L.latLngBounds([]);
 
@@ -175,6 +223,12 @@ export class AromeComponent implements OnInit {
     });
   }
 
+  /**
+   * Generate the map with the given bounds and layer.
+   * @param bounds the bounds of the map (in degrees)
+   * @param city the city to center the map on
+   * @param layer the layer to use (e.g. "temperature")
+   */
   generate_map(bounds: number, city: { ville: string, latitude: number, longitude: number }, layer: string) {
     if (this.map) {
       this.map.remove();
@@ -195,10 +249,10 @@ export class AromeComponent implements OnInit {
       this.map = L.map('map').setView([46.767834, 4.588333], 6);
     }else if (this.VilleLoc(city.ville) === "FRANCE") {
       this.arome = {
-        longitude_min: city.longitude - bounds,  // Remplace -12.0 par city.longitude
-        latitude_min: city.latitude - bounds/2,   // Remplace 37.5 par city.latitude
-        longitude_max: city.longitude + bounds, // Remplace 16.0 par city.longitude
-        latitude_max: city.latitude + bounds/2    // Remplace 55.4 par city.latitude
+        longitude_min: city.longitude - bounds,  
+        latitude_min: city.latitude - bounds/2, 
+        longitude_max: city.longitude + bounds,
+        latitude_max: city.latitude + bounds/2  
       };
       
       const b: L.LatLngBoundsExpression = [[this.arome.latitude_min, this.arome.longitude_min], [this.arome.latitude_max, this.arome.longitude_max]];
@@ -224,23 +278,27 @@ export class AromeComponent implements OnInit {
       console.log("City not recognized");
     }
       
-    //const bbox = `${this.arome.longitude_min},${this.arome.latitude_min},${this.arome.longitude_max},${this.arome.latitude_max}`;
-
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CartoDB</a>'
     }).addTo(this.map);
 
-    this.updateMapWithSelectedTime();  // Met à jour la carte avec l'intervalle de temps sélectionné
+    this.updateMapWithSelectedTime();  
   }
 
-  // Fonction pour mettre à jour la carte avec l'intervalle de temps sélectionné
+ 
+  /**
+   * Mets à jour la carte avec l'intervalle de temps sélectionné.
+   * Appelle le service WMS pour récupérer les couches WMS correspondantes à l'intervalle de temps
+   * et les ajoute à la carte.
+   * Désactive l'indicateur de chargement une fois que les couches sont chargées.
+   */
   updateMapWithSelectedTime(): void {
     if (!this.selectedTime) {
       console.error("Aucun intervalle de temps sélectionné.");
       return;
     }
 
-    this.isLoading = true;  // Active l'indicateur de chargement
+    this.isLoading = true;  
 
     const wmsParams = {
       service: 'WMS',
@@ -262,13 +320,11 @@ export class AromeComponent implements OnInit {
         [this.arome.latitude_max, this.arome.longitude_max]
       ];
 
-      // Supprime les overlays existants
       this.overlays.forEach(overlay => this.map.removeLayer(overlay));
       this.overlays = [];
 
       const overlay = L.imageOverlay(url, bounds, { opacity: 0.9 }).addTo(this.map);
-      this.overlays.push(overlay);  // Ajouter chaque overlay dans le tableau
-
+      this.overlays.push(overlay);  
       
     const wmsParams1 = {
       service: 'WMS',
@@ -291,7 +347,7 @@ export class AromeComponent implements OnInit {
         this.overlays.push(overlay);
       }, error => {
         console.error("Erreur lors du chargement de la deuxième couche WMS :", error);
-        this.isLoading = false;  // Désactive l'indicateur de chargement en cas d'erreur
+        this.isLoading = false;  
       });
     }, 50);
 
@@ -316,7 +372,7 @@ export class AromeComponent implements OnInit {
         this.overlays.push(overlay);
       }, error => {
         console.error("Erreur lors du chargement de la troisième couche WMS :", error);
-        this.isLoading = false;  // Désactive l'indicateur de chargement en cas d'erreur
+        this.isLoading = false;  
       });
     }, 100);
 
@@ -341,7 +397,7 @@ export class AromeComponent implements OnInit {
         this.overlays.push(overlay);
       }, error => {
         console.error("Erreur lors du chargement de la quatrième couche WMS :", error);
-        this.isLoading = false;  // Désactive l'indicateur de chargement en cas d'erreur
+        this.isLoading = false; 
       });
     }, 150);
 
@@ -366,7 +422,7 @@ export class AromeComponent implements OnInit {
         this.overlays.push(overlay);
       }, error => {
         console.error("Erreur lors du chargement de la cinquième couche WMS :", error);
-        this.isLoading = false;  // Désactive l'indicateur de chargement en cas d'erreur
+        this.isLoading = false;  
       });
     }, 200);
 
@@ -389,16 +445,20 @@ export class AromeComponent implements OnInit {
         const bounds: L.LatLngBoundsExpression = [[-25.25, -157.5], [-12.6, -144.5]];
         const overlay = L.imageOverlay(url, bounds, { opacity: 1 }).addTo(this.map);
         this.overlays.push(overlay);
-        this.isLoading = false;  // Désactive l'indicateur de chargement après le chargement de la dernière image
+        this.isLoading = false;  
       }, error => {
         console.error("Erreur lors du chargement de la sixième couche WMS :", error);
-        this.isLoading = false;  // Désactive l'indicateur de chargement en cas d'erreur
+        this.isLoading = false;  
       });
     }, 250);
   })
   this.updatePins();
   }
 
+  /**
+   * Resets the search input and suggestions.
+   * Called when the user clicks on the clear button.
+   */
   clearSearch() {
     this.searchCity = '';
     this.filteredCities = [];
