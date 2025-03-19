@@ -55,6 +55,10 @@ export class LlmComponent implements AfterViewChecked {
     this.loadMsg(this.userInfo.id);
   }
 
+  /**
+   * Loads the messages for a given user
+   * @param id the id of the user
+   */
   private loadMsg(id: number): void {
     this.service.getUserMessages(id).subscribe({
       next: (response) => {
@@ -71,6 +75,19 @@ export class LlmComponent implements AfterViewChecked {
       },
     });
   }
+
+/**
+ * Sends a user message to the bot and handles the response.
+ * 
+ * This function adds the user's message to the messages array, sets the 
+ * waiting state, and initializes an empty response. It then sends the 
+ * user's message to the LLMService and subscribes to the response. As 
+ * chunks of the response arrive, they are appended to the current response 
+ * and the view is scrolled to the bottom. Once the response is complete, 
+ * the waiting state is reset, and the conversation is saved. Any errors 
+ * encountered during message sending are logged, and the waiting state 
+ * is reset.
+ */
 
   sendMessage() {
     if (!this.userMessage.trim()) return;
@@ -109,12 +126,26 @@ export class LlmComponent implements AfterViewChecked {
     this.userMessage = "";
   }
 
+  /**
+   * Sanitizes the input message content by converting Markdown to HTML
+   * and bypassing Angular's security checks to trust the resulting HTML.
+   *
+   * @param content The message content in Markdown format.
+   * @returns The sanitized HTML content marked as safe for binding.
+   */
+
   sanitizeMessage(content: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(marked.parse(content));
   }
 
   ngAfterViewChecked() {}
 
+  /**
+   * Scrolls the conversation container to the bottom and shows the "Scroll to Top" button.
+   *
+   * This function is called after the user sends a message and the bot response is received.
+   * The timeout is used to ensure that the container height has been updated before scrolling.
+   */
   private scrollToBottom(): void {
     setTimeout(() => {
       if (!this.conversationContainer) return;
@@ -124,6 +155,11 @@ export class LlmComponent implements AfterViewChecked {
     }, 0);
   }
 
+  /**
+   * Smoothly scrolls the conversation container to the top.
+   *
+   * This function is called when the user clicks the "Scroll to Top" button.
+   */
   scrollToTop() {
     const container = this.conversationContainer.nativeElement;
     container.scrollTo({
