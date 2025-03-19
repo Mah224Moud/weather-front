@@ -75,6 +75,10 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
     });
   }
 
+/**
+ * Initializes Bootstrap tooltips for all elements with the `data-bs-toggle="tooltip"` attribute after the view has been fully initialized.
+ */
+
   ngAfterViewInit(): void {
     const tooltipTriggerList = document.querySelectorAll(
       '[data-bs-toggle="tooltip"]'
@@ -82,6 +86,11 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
     tooltipTriggerList.forEach((el) => new bootstrap.Tooltip(el));
   }
 
+  /**
+   * Loads the total number of data records from the data service.
+   * Subscribes to the getTotal() observable and sets the total property
+   * to the response value on success, or sets it to 0 on error.
+   */
   private loadTotal(): void {
     this.dataService.getTotal().subscribe({
       next: (response) => {
@@ -94,6 +103,11 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * Subscribes to the getLocalisations() observable and sets the localisations
+   * property to the response value on success, or logs an error on error.
+   * Resets the retryAttempt property to 0 on success.
+   */
   getDataLoc() {
     this.dataService.getLocalisations().subscribe({
       next: (data) => {
@@ -110,6 +124,14 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
     });
   }
 
+/**
+ * Selects the default city from the list of localisations.
+ *
+ * Searches for the city with the name "DIJON-LONGVIC" in the `localisations` list and 
+ * assigns it to the `selectdefault` property. If found, updates the `Ville` property 
+ * with the city's name. Logs a message if the default city is not found.
+ */
+
   selectDefaultCity(): void {
     this.selectdefault = this.localisations.find(
       (city) => city.ville === "DIJON-LONGVIC"
@@ -121,6 +143,20 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
       console.log(" Ville par défaut non trouvée !");
     }
   }
+
+/**
+ * Retrieves climate data for the specified city and date range.
+ *
+ * If the city name (`Ville`), start date (`dateDebut`), or end date (`dateFin`) are not set,
+ * the function returns immediately without making any requests.
+ *
+ * Sends a request through the `consultationService` to fetch climate data between the
+ * specified start and end dates for the given city. On success, assigns the retrieved
+ * data to the `donneesClimatiques` property and logs the details, including the city name
+ * and date range. Resets the `retryAttempt` property to 0 on a successful response.
+ *
+ * Logs an error message if the data retrieval fails.
+ */
 
   rechercher() {
     if(!this.Ville || !this.dateDebut || !this.dateFin) {
@@ -142,10 +178,24 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * Checks if a column is selected.
+   *
+   * @param column The column key to check.
+   * @returns Whether the column is selected.
+   */
   isSelected(column: string): boolean {
     return this.selectedColumns[column];
   }
 
+  /**
+   * Filters the list of cities based on the user's search input.
+   *
+   * If the search input is empty, clears the filtered cities list.
+   * If the search input is not empty, filters the list of cities
+   * based on whether the city name starts with the search input
+   * (case-insensitive).
+   */
   onSearch(): void {
     if (!this.Ville.trim()) {
       this.filteredCities = [];
@@ -157,15 +207,36 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Handles the selection of a city from the suggestions list.
+   *
+   * Sets the selected city and clears the filtered cities list.
+   * @param city The city to select.
+   */
   onCitySelect(city: any): void {
     this.selectedCity = city;
     this.Ville = this.selectedCity.ville;
     this.filteredCities = [];
   }
 
+  /**
+   * Handles the page change event from the pagination controls.
+   *
+   * Sets the current page number.
+   * @param event The new page number.
+   */
   onPageChange(event: number): void {
     this.page = event;
   }
+
+  /**
+   * Initiates the download process for climate data in the selected format.
+   * 
+   * Depending on the `selectedFormat` property, the function triggers either
+   * JSON or CSV download of the filtered climate data. It utilizes helper
+   * functions `downloadJSON` and `downloadCSV` to handle the download process
+   * for each format respectively.
+   */
 
   Download(): void {
     if (this.selectedFormat === "json") {
@@ -175,6 +246,17 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Initiates the download process for climate data in JSON format.
+   *
+   * This function creates a new blob object containing the filtered climate data
+   * in JSON format. It then prompts the user to enter a filename and triggers a
+   * download of the blob object with the specified filename.
+   *
+   * Note: The download process is triggered by creating a new link element and
+   * setting its href property to the blob object URL. The link element is then
+   * clicked programmatically to start the download.
+   */
   downloadJSON(): void {
     const dataToDownload = this.donneesClimatiques.map((item) => {
       const filteredItem: any = {};
@@ -206,6 +288,17 @@ export class DataConsultationComponent implements OnInit, AfterViewInit {
     link.click();
   }
 
+  /**
+   * Download the filtered climate data in CSV format.
+   *
+   * This function creates a new CSV string containing the filtered climate data
+   * with the selected columns and prompts the user to enter a filename. It then
+   * triggers a download of the CSV string with the specified filename.
+   *
+   * Note: The download process is triggered by creating a new link element and
+   * setting its href property to the blob object URL. The link element is then
+   * clicked programmatically to start the download.
+   */
   downloadCSV(): void {
     const selectedKeys = Object.keys(this.selectedColumns).filter(
       (key) => this.selectedColumns[key]
