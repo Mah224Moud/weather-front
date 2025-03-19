@@ -56,6 +56,15 @@ export class LoginComponent {
 
   ngOnInit() {}
 
+  /**
+   * Logs in a user with the provided email and password.
+   * Calls the login() method of the LoginService.
+   * If the response is truthy, calls the getUserInfo() method and logs the user in.
+   * If the response is falsy, shows a toast with a warning message.
+   * On error, logs the error to the console.
+   * @param email - The email address of the user to log in.
+   * @param password - The password for the user's account.
+   */
   login(email: string, password: string): void {
     this.loginService.login(email, password).subscribe({
       next: (response) => {
@@ -76,6 +85,17 @@ export class LoginComponent {
     });
   }
 
+  /**
+   * Registers a new user with the provided details.
+   * Initiates a registration request via the LoginService and handles the response.
+   * On successful registration, displays a success message and resets the registration form.
+   * On error, displays an error message.
+   *
+   * @param lastName - The last name of the user to be registered.
+   * @param firstName - The first name of the user to be registered.
+   * @param email - The email address of the user to be registered.
+   * @param password - The password for the user's account.
+   */
   registration(
     lastName: string,
     firstName: string,
@@ -103,6 +123,11 @@ export class LoginComponent {
       });
   }
 
+  /**
+   * Attempts to log in a user with the provided details.
+   * If the form is valid, calls the login() method.
+   * If the form is invalid, displays a warning message.
+   */
   onLogin() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
@@ -112,6 +137,14 @@ export class LoginComponent {
     }
   }
 
+  /**
+   * Recupere les informations d'un utilisateur en fonction de son email.
+   * Fait une requete GET a l'API avec l'email en parametre.
+   * Stocke les informations de l'utilisateur dans this.userInfo.
+   * Affiche un toast avec un message de bienvenue.
+   * Affiche les informations de l'utilisateur dans la console.
+   * @param email - L'email de l'utilisateur.
+   */
   getUserInfo(email: string): void {
     this.loginService.getUserInfo(email).subscribe({
       next: (response) => {
@@ -137,6 +170,11 @@ export class LoginComponent {
     });
   }
 
+  /**
+   * Registers a new user with the provided details.
+   * If the form is valid, calls the registration() method.
+   * If the form is invalid, displays a warning message.
+   */
   onRegister() {
     if (this.registerForm.valid) {
       const { firstName, lastName, email, password } = this.registerForm.value;
@@ -151,6 +189,14 @@ export class LoginComponent {
     }
   }
 
+  /**
+   * Affiche un toast avec un message et un type de message (succès, danger, avertissement, info).
+   * Si le toast est déjà affiché, le remplace par le nouveau.
+   * Si le type est omis, prend la valeur par défaut "success".
+   *
+   * @param message - Le message à afficher.
+   * @param type - Le type de message (par défaut "success").
+   */
   showToast(message: string, type: string = "success") {
     const toastLiveExample = document.getElementById("liveToast");
     if (toastLiveExample) {
@@ -177,6 +223,12 @@ export class LoginComponent {
     }
   }
 
+  /**
+   * Inverse l'affichage des deux formulaires de connexion et d'inscription.
+   * Empêche le comportement par défaut du formulaire (recharge de la page).
+   *
+   * @param event - L'événement du formulaire.
+   */
   toggleForms(event: Event) {
     event.preventDefault();
     this.showLoginForm = !this.showLoginForm;
