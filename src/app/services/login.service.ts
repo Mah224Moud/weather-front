@@ -14,6 +14,20 @@ export class LoginService {
     return this.http.get(this.url + email);
   }
 
+/**
+ * Attempts to log in a user with the provided email and password.
+ * Sends a POST request to the authentication API endpoint with the email
+ * and password as parameters.
+ * Logs the API response to the console on success.
+ * Catches and logs any errors during the API call and returns an observable
+ * with a success property set to false in case of an error.
+ *
+ * @param email - The email address of the user attempting to log in.
+ * @param password - The password associated with the user's email.
+ * @returns An observable that emits the API response, which contains a
+ *          success boolean indicating the login attempt's outcome.
+ */
+
   login(email: string, password: string): Observable<any> {
     const params = new HttpParams()
       .set("email", email)
@@ -30,6 +44,21 @@ export class LoginService {
       );
   }
 
+  /**
+   * Registers a new user with the provided details.
+   * Sends a POST request to the user registration API endpoint with the
+   * user's details as parameters.
+   * Logs the API response to the console on success.
+   * Catches and logs any errors during the API call and returns an observable
+   * with the API response.
+   *
+   * @param nom - The last name of the user to be registered.
+   * @param prenom - The first name of the user to be registered.
+   * @param email - The email address of the user to be registered.
+   * @param motDePasse - The password for the user's account.
+   * @returns An observable that emits the API response, which contains the
+   *          newly created user's details.
+   */
   registration(
     nom: string,
     prenom: string,

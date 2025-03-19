@@ -15,6 +15,12 @@ export class WmsService {
 
   constructor(private http: HttpClient) {}
 
+  /**
+   * Send a GET request to the WMS API to retrieve a layer of data.
+   * @param params The parameters to send with the request. See the WMS API
+   * documentation for the available parameters.
+   * @returns The response as a blob.
+   */
   getWmsLayer(params: any) {
     const headers = new HttpHeaders({
       'accept': 'image/png',
@@ -24,6 +30,12 @@ export class WmsService {
     return this.http.get(this.wmsUrl, { headers, params, responseType: 'blob' });
   }
 
+
+  /**
+   * Retrieves the WMS layer for the Nouvelle-Cal donie region using the provided parameters.
+   * @param params The parameters to pass to the WMS service.
+   * @returns An Observable that emits the WMS layer as a blob.
+   */
   getWmsLayerNCALED(params: any) {
     const headers = new HttpHeaders({
       'accept': 'image/png',
@@ -33,6 +45,14 @@ export class WmsService {
     return this.http.get(this.wmsUrlNCALED, { headers, params, responseType: 'blob' });
   }
 
+  
+  /**
+   * Retrieves the WMS layer for the Indien region using the provided parameters.
+   * Sends an HTTP GET request to the WMS service URL specific to Indien.
+   * 
+   * @param params - The parameters to be sent with the WMS request.
+   * @returns An Observable that emits the blob response containing the WMS layer image.
+   */
   getWmsLayerINDIEN(params: any) {
     const headers = new HttpHeaders({
       'accept': 'image/png',
@@ -41,6 +61,14 @@ export class WmsService {
 
     return this.http.get(this.wmsUrlINDIEN, { headers, params, responseType: 'blob' });
   }
+
+  /**
+   * Retrieves the WMS layer for the Guyane region using the provided parameters.
+   * Sends an HTTP GET request to the WMS service URL specific to Guyane.
+   * 
+   * @param params - The parameters to be sent with the WMS request.
+   * @returns An Observable that emits the blob response containing the WMS layer image.
+   */
 
   getWmsLayerGUYANE(params: any) {
     const headers = new HttpHeaders({
@@ -51,6 +79,13 @@ export class WmsService {
     return this.http.get(this.wmsUrlGUYANE, { headers, params, responseType: 'blob' });
   }
 
+/**
+ * Retrieves the WMS layer for the Antilles region using the provided parameters.
+ * Sends an HTTP GET request to the WMS service URL specific to Antilles.
+ * 
+ * @param params - The parameters to be sent with the WMS request.
+ * @returns An Observable that emits the blob response containing the WMS layer image.
+ */
   getWmsLayerANTIL(params: any) {
     const headers = new HttpHeaders({
       'accept': 'image/png',
@@ -60,6 +95,13 @@ export class WmsService {
     return this.http.get(this.wmsUrlANTIL, { headers, params, responseType: 'blob' });
   }
 
+  /**
+   * Retrieves the WMS layer for the Polynsie region using the provided parameters.
+   * Sends an HTTP GET request to the WMS service URL specific to Polynsie.
+   * 
+   * @param params - The parameters to be sent with the WMS request.
+   * @returns An Observable that emits the blob response containing the WMS layer image.
+   */
   getWmsLayerPOLYN(params: any) {
     const headers = new HttpHeaders({
       'accept': 'image/png',

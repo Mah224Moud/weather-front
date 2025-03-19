@@ -40,6 +40,13 @@ export class DataService {
 
   constructor(private http: HttpClient) {}
 
+  /**
+   * Fetches the localisations from the API.
+   * Measures and logs the response time of the GET request.
+   *
+   * @returns An Observable emitting the localisation data.
+   */
+
   getLocalisations(): Observable<any> {
     const debut = performance.now(); 
   
@@ -53,6 +60,12 @@ export class DataService {
   }
   
 
+  /**
+   * Fetches the total number of data records from the API.
+   * Measures and logs the response time of the GET request.
+   * 
+   * @returns An Observable emitting the total number of data records.
+   */
   getTotal(): Observable<any> {
     const debut = performance.now(); 
   
@@ -66,6 +79,13 @@ export class DataService {
   }
 
 
+  /**
+   * Fetches the data for a given station and date range from the API.
+   * 
+   * @param numStation The number of the station to retrieve data for.
+   * @param date The date for which to retrieve data. The returned data will be for the week ending on this date.
+   * @returns An Observable emitting the retrieved data.
+   */
   getInfo(numStation: number, date: string): Observable<any> {
     console.log("Date reçue:", date);
   
@@ -115,6 +135,13 @@ export class DataService {
   }
   
 
+/**
+ * Fetches the yearly statistics for a given station from the API.
+ * Measures and logs the response time of the GET request.
+ *
+ * @param numStation The station number for which to retrieve yearly statistics.
+ * @returns An Observable emitting the yearly statistics data.
+ */
   getYearlyStats(numStation: number): Observable<any> {
     const debut = performance.now(); 
   
@@ -127,6 +154,16 @@ export class DataService {
     );
   }
   
+
+
+/**
+ * Fetches the weekly statistics for a given station and year from the API.
+ * Measures and logs the response time of the GET request.
+ *
+ * @param numStation The station number for which to retrieve weekly statistics.
+ * @param year The year for which to retrieve the weekly statistics.
+ * @returns An Observable emitting the weekly statistics data.
+ */
 
   getWeeklyStats(numStation: number, year: number): Observable<any> {
     const debut = performance.now(); 
@@ -141,6 +178,14 @@ export class DataService {
   }
   
 
+  /**
+   * Fetches the daily statistics for a given year and month from the API.
+   * Measures and logs the response time of the GET request.
+   *
+   * @param year The year for which to retrieve the daily statistics.
+   * @param month The month for which to retrieve the daily statistics.
+   * @returns An Observable emitting the daily statistics data.
+   */
   getDailyStats(year: number, month: number): Observable<any> {
     console.log("URL Daily appélé: ", this.apiDailyStat + "?mois=" + month + "&annee=" + year);
   
@@ -156,6 +201,14 @@ export class DataService {
   }
   
 
+  /**
+   * Fetches the daily statistics for a given year and month from the API, adapted for the Visualization component.
+   * Measures and logs the response time of the GET request.
+   *
+   * @param year The year for which to retrieve the daily statistics.
+   * @param month The month for which to retrieve the daily statistics.
+   * @returns An Observable emitting the daily statistics data.
+   */
   getDailyStatsVUE(year: number, month: number): Observable<any> {
     console.log("URL Daily_Vue appélé: ", this.apiDailyStatVUE + "?mois=" + month + "&annee=" + year);
     
@@ -170,6 +223,13 @@ export class DataService {
     );
   }
 
+/**
+ * Fetches the average statistics from the API.
+ * Measures and logs the response time of the GET request.
+ *
+ * @returns An Observable emitting the average statistics data.
+ */
+
   getAvergeStats() {
     const debut = performance.now(); 
   
@@ -183,14 +243,30 @@ export class DataService {
   }
   
 
+  /**
+   * Fetches the top 15 days with the highest temperatures in France.
+   *
+   * @returns An Observable emitting the top 15 days with the highest temperatures.
+   */
   getTopCanicule() {
     return this.http.get(this.apiTopCanicule);
   }
 
+  /**
+   * Fetches the top 15 days with the lowest temperatures in France.
+   *
+   * @returns An Observable emitting the top 15 days with the lowest temperatures.
+   */
   getTopFroid() {
     return this.http.get(this.apiTopFroid);
   }
 
+  /**
+   * Fetches the yearly delta temperatures for a given station number from the API.
+   * Measures and logs the response time of the GET request.
+   * @param numStation The station number for which to retrieve the yearly delta temperatures.
+   * @returns An Observable emitting the yearly delta temperatures data.
+   */
   getDeltaTemperatures(numStation: number){
     const debut = performance.now(); 
     console.log("URL Delta appélé: ", this.apiDeltaT+numStation);

@@ -17,6 +17,14 @@ export class LLMService {
 
   constructor(private http: HttpClient) {}
 
+  /**
+   * Envoie un message à l'assistant pour obtenir une réponse en forme de requête SQL.
+   * @param msg Le message à envoyer.
+   * @returns Un Observable qui émet la réponse de l'assistant.
+   * @example
+   * llmService.sendMessage('SELECT * FROM localisation WHERE altitude > 500')
+   *   .subscribe((response) => console.log(response));
+   */
   sendMessage(msg: string): Observable<string> {
     const table = `
     Tu es un assistant spécialisé dans la génération de requêtes SQL pour deux tables spécifiques :
@@ -123,6 +131,16 @@ Fin des règles.
     });
   }
 
+
+
+
+  /**
+   * Analyse un buffer de texte brut pour extraire les messages LLaMA,
+   * les envoyer via l'observable et renvoyer le buffer non trait .
+   * @param buffer Le buffer de texte brut.
+   * @param observer L'observable qui re oit les messages LLaMA.
+   * @returns Le buffer non trait .
+   */
   private parseBuffer(buffer: string, observer: any): string {
     const lines = buffer.split("\n");
 
@@ -143,6 +161,12 @@ Fin des règles.
     return buffer;
   }
 
+  /**
+   * Sauvegarde la conversation entre l'utilisateur et le modèle.
+   * @param msg La requête de l'utilisateur.
+   * @param resp La réponse du modèle.
+   * @param userID L'ID de l'utilisateur.
+   */
   saveConversation(msg: string, resp: string, userID: number) {
     const conversationData = {
       idUser: userID,
@@ -160,6 +184,11 @@ Fin des règles.
     });
   }
 
+  /**
+   * Renvoie la liste des messages d'un utilisateur.
+   * @param id L'ID de l'utilisateur.
+   * @returns Un Observable qui émet les messages de l'utilisateur.
+   */
   getUserMessages(id: number): Observable<any> {
     return this.http.get(this.userMsg + id);
   }

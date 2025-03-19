@@ -16,6 +16,16 @@ export class ConsultationService {
   private apiUrl_donneclimatique =
     "http://172.31.60.248:8080/api/donnees-climatiques";
 
+  /**
+   * Envoie une requete GET a l'API pour recuperer les donnees climatiques
+   * pour une ville et une periode de temps.
+   *
+   * @param Ville le nom de la ville
+   * @param dateDebut la date de debut de la periode
+   * @param dateFin la date de fin de la periode
+   *
+   * @returns un Observable qui emet les donnees climatiques
+   */
   rechercherEntreDates(
     Ville: string,
     dateDebut: string,
